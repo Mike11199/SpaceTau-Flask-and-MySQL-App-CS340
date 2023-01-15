@@ -25,7 +25,7 @@ def root():
     query = "SELECT * FROM diagnostic;"
     query1 = 'DROP TABLE IF EXISTS diagnostic;'
     query2 = 'CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);'
-    query3 = 'INSERT INTO diagnostic (text) VALUES ("MySQL is working for activity 2!  This should run even after disconnecting SSH due to gunicorn")'
+    query3 = 'INSERT INTO diagnostic (text) VALUES ("testing for final project!!")'
     query4 = 'SELECT * FROM diagnostic;'
     cur = mysql.connection.cursor()
     cur.execute(query1)
