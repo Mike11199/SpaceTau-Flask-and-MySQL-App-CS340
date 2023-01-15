@@ -1,0 +1,14 @@
+# https://stackoverflow.com/questions/3719243/best-practices-for-adding-gitignore-file-for-python-projects
+
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+
+# Distribution / packaging
+bin/
+lib/
+lib64/
+bin
