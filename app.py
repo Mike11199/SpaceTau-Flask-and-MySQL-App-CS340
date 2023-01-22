@@ -4,14 +4,14 @@ from flask import request
 import os
 
 USER_NAME = os.getenv("USER_NAME")
-PASSWORD_LAST_4_ONID = os.getenv("ONID_LAST_4")
+PASSWORD_LAST_4_DIGITS_STUDENT_ID = os.getenv("ONID_LAST_4")
 
 
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
 app.config['MYSQL_USER'] = USER_NAME
-app.config['MYSQL_PASSWORD'] = PASSWORD_LAST_4_ONID #last 4 of onid
+app.config['MYSQL_PASSWORD'] = PASSWORD_LAST_4_DIGITS_STUDENT_ID #last 4 of onid
 app.config['MYSQL_DB'] = USER_NAME
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
@@ -41,4 +41,4 @@ def root():
 if __name__ == "__main__":
 
     #Start the app on port 3000, it will be different once hosted; changed to 6574 per tutorial video
-    app.run(port=6717, debug=True)
+    app.run(port=6719, debug=True)
