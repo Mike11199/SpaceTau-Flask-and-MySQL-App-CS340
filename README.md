@@ -10,3 +10,13 @@
 - The SQL file can be imported in PHPMyAdmin to restore the database
 - The .mwb file is the schema used by MySQL workbench to forward engineer schema to the database
 - Use the command 'gunicorn -b 0.0.0.0:6717 -D app:app' to run  ( I think only one group member can use the port at a time, so may have to modify app.py)
+
+
+
+# Schema Diagram
+![image](https://user-images.githubusercontent.com/91037796/215379622-3b84eb56-2ee7-4fe2-a0fc-6a07e7474c00.png)
+
+
+# Entity Relationship Diagram (ERD)
+
+![ERD](https://user-images.githubusercontent.com/91037796/215379806-03ab3883-83bb-4a6e-ad84-d0f6da1e263f.png)
