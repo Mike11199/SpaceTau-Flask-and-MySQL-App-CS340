@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 05, 2023 at 03:24 PM
+-- Generation Time: Feb 05, 2023 at 03:58 PM
 -- Server version: 10.6.11-MariaDB-log
 -- PHP Version: 8.2.2
 
@@ -50,6 +50,13 @@ CREATE TABLE `Clients` (
   `address` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
+--
+-- Dumping data for table `Clients`
+--
+
+INSERT INTO `Clients` (`id_client`, `EIN`, `name`, `contribution_amount`, `address`) VALUES
+(1, '967657565.00', 'Lockheed Martin', '50000000.00', '3251 Hanover St, Palo Alto, CA 94304');
+
 -- --------------------------------------------------------
 
 --
@@ -67,6 +74,13 @@ CREATE TABLE `Missions` (
   `Spacecraft_id_spacecraft` int(11) NOT NULL,
   `mission_description` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `Missions`
+--
+
+INSERT INTO `Missions` (`id_mission`, `name`, `contract_revenues`, `contract_costs`, `contract_profit`, `isExternal`, `Clients_id_client`, `Spacecraft_id_spacecraft`, `mission_description`) VALUES
+(1, 'Garmin Satellite Launch', '160000000.00', '30000000.00', '130000000.00', 1, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -93,7 +107,7 @@ INSERT INTO `Parts` (`id_part`, `name`, `manufacturer`, `mass_kg`, `cost`, `part
 (3, 'PEPT-200 Diaphragm Propellant Tank (Hydrazine', 'Rafael Advanced Defense Systems', '0.91', '2000.00', 'Spherical tank used to store monopropellant for RCS thrusters.\r\n\r\nhttps://www.satcatalog.com/component/pept-200-diaphragm-propellant-tank/'),
 (4, 'R-800 Hall Effect Thruster (HET) Xenon/Krypto', 'Rafael Space Propulsion', '1.50', '100000.00', 'A xenon/krypton ion thruster for low mass, less than 1000kg satellites.  Produces 23-50 mN (Millinewtons) of thrust.'),
 (5, 'Smallsat Perimeter Truss (SPT) Reflector ', 'L3Harris', '18.60', '75000.00', 'HCR is a high-accuracy, large aperture antenna optimized accurate enough for high\r\nfrequency missions (e.g. Ka or V band). \r\n https://www.l3harris.com/sites/default/files/2020-09/l3harris-smallsat-perimeter-truss-spec-sheet-sas.pdf'),
-(6, 'Crew Dragon Endurance Manned Capsule', 'SpaceX', '6000.00', '100000000.00', 'A manned space capsule capable of carrying 3,307 kg or 7,291 lbs of cargo to the ISS, and up to 4 astronauts. '),
+(6, 'Crew Dragon Manned Capsule', 'SpaceX', '6000.00', '100000000.00', 'A manned space capsule capable of carrying 3,307 kg or 7,291 lbs of cargo to the ISS, and up to 4 astronauts. '),
 (7, 'LIFE (Large Integrated Flexible Environment) ', 'Sierra Space', '5000.00', '40000000.00', 'Inflatable habitat that expands in-orbit to a large structure that is three stories tall, and 27 feet in diameter. \r\n\r\nhttps://www.sierraspace.com/space-destinations/life-space-habitat/');
 
 -- --------------------------------------------------------
@@ -141,6 +155,13 @@ CREATE TABLE `Spacecraft` (
   `delta_v_remaining` decimal(19,2) DEFAULT NULL,
   `mission_elapsed_time_days` decimal(19,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `Spacecraft`
+--
+
+INSERT INTO `Spacecraft` (`id_spacecraft`, `name`, `in_orbit`, `launched`, `Planetary_Objects_id_planetary_object`, `delta_v_remaining`, `mission_elapsed_time_days`) VALUES
+(1, 'Garmin Satellite ', 1, 1, 3, '500.00', '43.00');
 
 -- --------------------------------------------------------
 
@@ -227,13 +248,13 @@ ALTER TABLE `Astronauts`
 -- AUTO_INCREMENT for table `Clients`
 --
 ALTER TABLE `Clients`
-  MODIFY `id_client` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_client` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `Missions`
 --
 ALTER TABLE `Missions`
-  MODIFY `id_mission` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_mission` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `Parts`
@@ -251,7 +272,7 @@ ALTER TABLE `Planetary_Objects`
 -- AUTO_INCREMENT for table `Spacecraft`
 --
 ALTER TABLE `Spacecraft`
-  MODIFY `id_spacecraft` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_spacecraft` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
