@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 05, 2023 at 04:51 PM
+-- Generation Time: Feb 05, 2023 at 04:53 PM
 -- Server version: 10.6.11-MariaDB-log
 -- PHP Version: 8.2.2
 
@@ -111,8 +111,8 @@ CREATE TABLE `Parts` (
 INSERT INTO `Parts` (`id_part`, `name`, `manufacturer`, `mass_kg`, `cost`, `part_description`) VALUES
 (1, 'Roll Out Solar Array (ROSA)', 'Redwire', '325.00', '17000000.00', '120 KW solar array that is 20 percent lighter and 1/4th the volume of rigid panel arrays.\r\n\r\nhttps://spaceflightnow.com/2022/12/03/iss-eva-82/#:~:text=NASA%20is%20upgrading%20the%20space,station\'s%20eight%20original%20solar%20panels.'),
 (2, 'RDR 68 Reaction Wheel', 'Collins Aerospace', '8.00', '50000.00', 'The wheels accommodate the requirements of attitude control systems for spacecraft weighing between 30 kg and 7,000 kg.\r\n\r\nhttps://www.satcatalog.com/component/rdr-68-3/'),
-(3, 'PEPT-200 Diaphragm Propellant Tank (Hydrazine', 'Rafael Advanced Defense Systems', '0.91', '2000.00', 'Spherical tank used to store monopropellant for RCS thrusters.\r\n\r\nhttps://www.satcatalog.com/component/pept-200-diaphragm-propellant-tank/'),
-(4, 'R-800 Hall Effect Thruster (HET) Xenon/Krypto', 'Rafael Space Propulsion', '1.50', '100000.00', 'A xenon/krypton ion thruster for low mass, less than 1000kg satellites.  Produces 23-50 mN (Millinewtons) of thrust.'),
+(3, 'PEPT-200 Diaphragm Propellant Tank', 'Rafael Advanced Defense Systems', '0.91', '2000.00', 'Spherical tank used to store monopropellant (Krypton/Hydrazine) for RCS thrusters. \r\n\r\nhttps://www.satcatalog.com/component/pept-200-diaphragm-propellant-tank/'),
+(4, 'R-800 Hall Effect Thruster (HET)', 'Rafael Space Propulsion', '1.50', '100000.00', 'A Xenon/Krypton ion thruster for low mass, less than 1000kg, satellites.  Produces 23-50 mN (Millinewtons) of thrust.'),
 (5, 'Smallsat Perimeter Truss (SPT) Reflector ', 'L3Harris', '18.60', '75000.00', 'HCR is a high-accuracy, large aperture antenna optimized accurate enough for high\r\nfrequency missions (e.g. Ka or V band). \r\n https://www.l3harris.com/sites/default/files/2020-09/l3harris-smallsat-perimeter-truss-spec-sheet-sas.pdf'),
 (6, 'Crew Dragon Manned Capsule', 'SpaceX', '6000.00', '100000000.00', 'A manned space capsule capable of carrying 3,307 kg or 7,291 lbs of cargo to the ISS, and up to 4 astronauts. '),
 (7, 'LIFE (Large Integrated Flexible Environment) ', 'Sierra Space', '5000.00', '40000000.00', 'Inflatable habitat that expands in-orbit to a large structure that is three stories tall, and 27 feet in diameter. \r\n\r\nhttps://www.sierraspace.com/space-destinations/life-space-habitat/');
