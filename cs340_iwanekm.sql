@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 05, 2023 at 03:58 PM
+-- Generation Time: Feb 05, 2023 at 04:51 PM
 -- Server version: 10.6.11-MariaDB-log
 -- PHP Version: 8.2.2
 
@@ -33,8 +33,15 @@ CREATE TABLE `Astronauts` (
   `age` decimal(19,2) DEFAULT NULL,
   `gender` varchar(45) DEFAULT NULL,
   `mission_role` varchar(45) DEFAULT NULL,
-  `Spacecraft_id_spacecraft` int(11) NOT NULL
+  `Spacecraft_id_spacecraft` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `Astronauts`
+--
+
+INSERT INTO `Astronauts` (`id_astronaut`, `name`, `age`, `gender`, `mission_role`, `Spacecraft_id_spacecraft`) VALUES
+(1, 'Buzz Aldrin', '93.00', 'Male', 'Pilot', NULL);
 
 -- --------------------------------------------------------
 
@@ -44,7 +51,7 @@ CREATE TABLE `Astronauts` (
 
 CREATE TABLE `Clients` (
   `id_client` int(11) NOT NULL,
-  `EIN` decimal(19,2) DEFAULT NULL,
+  `EIN` double DEFAULT NULL,
   `name` varchar(45) NOT NULL,
   `contribution_amount` decimal(19,2) DEFAULT NULL,
   `address` varchar(45) DEFAULT NULL
@@ -55,7 +62,7 @@ CREATE TABLE `Clients` (
 --
 
 INSERT INTO `Clients` (`id_client`, `EIN`, `name`, `contribution_amount`, `address`) VALUES
-(1, '967657565.00', 'Lockheed Martin', '50000000.00', '3251 Hanover St, Palo Alto, CA 94304');
+(1, 967657565, 'Lockheed Martin', '52300300.00', '3251 Hanover St, Palo Alto, CA 94304');
 
 -- --------------------------------------------------------
 
@@ -68,19 +75,19 @@ CREATE TABLE `Missions` (
   `name` varchar(45) NOT NULL,
   `contract_revenues` decimal(19,2) DEFAULT NULL,
   `contract_costs` decimal(19,2) DEFAULT NULL,
-  `contract_profit` decimal(19,2) DEFAULT NULL,
+  `contract_profit` decimal(19,2) GENERATED ALWAYS AS (`contract_revenues` - `contract_costs`) STORED,
   `isExternal` tinyint(4) DEFAULT NULL,
-  `Clients_id_client` int(11) NOT NULL,
-  `Spacecraft_id_spacecraft` int(11) NOT NULL,
-  `mission_description` varchar(300) DEFAULT NULL
+  `mission_description` varchar(300) DEFAULT NULL,
+  `Spacecraft_id_spacecraft` int(11) DEFAULT NULL,
+  `Clients_id_client` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 --
 -- Dumping data for table `Missions`
 --
 
-INSERT INTO `Missions` (`id_mission`, `name`, `contract_revenues`, `contract_costs`, `contract_profit`, `isExternal`, `Clients_id_client`, `Spacecraft_id_spacecraft`, `mission_description`) VALUES
-(1, 'Garmin Satellite Launch', '160000000.00', '30000000.00', '130000000.00', 1, 1, 1, NULL);
+INSERT INTO `Missions` (`id_mission`, `name`, `contract_revenues`, `contract_costs`, `isExternal`, `mission_description`, `Spacecraft_id_spacecraft`, `Clients_id_client`) VALUES
+(1, 'Garmin GPS Network Launch Service', '152300000.00', '37520000.00', 1, 'A mission to launch a satellite for the Garmin GPS network into a geosynchronous orbit around Earth.  ', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -161,7 +168,7 @@ CREATE TABLE `Spacecraft` (
 --
 
 INSERT INTO `Spacecraft` (`id_spacecraft`, `name`, `in_orbit`, `launched`, `Planetary_Objects_id_planetary_object`, `delta_v_remaining`, `mission_elapsed_time_days`) VALUES
-(1, 'Garmin Satellite ', 1, 1, 3, '500.00', '43.00');
+(1, 'Garmin GPS Satellite 34', 1, 1, 3, '500.00', '43.00');
 
 -- --------------------------------------------------------
 
@@ -171,9 +178,18 @@ INSERT INTO `Spacecraft` (`id_spacecraft`, `name`, `in_orbit`, `launched`, `Plan
 
 CREATE TABLE `Spacecraft_has_Parts` (
   `Spacecraft_id_spacecraft` int(11) NOT NULL,
-  `Spacecraft_Planetary_Objects_id_planetary_object` int(11) NOT NULL,
   `Parts_id_part` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `Spacecraft_has_Parts`
+--
+
+INSERT INTO `Spacecraft_has_Parts` (`Spacecraft_id_spacecraft`, `Parts_id_part`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4);
 
 --
 -- Indexes for dumped tables
@@ -183,7 +199,7 @@ CREATE TABLE `Spacecraft_has_Parts` (
 -- Indexes for table `Astronauts`
 --
 ALTER TABLE `Astronauts`
-  ADD PRIMARY KEY (`id_astronaut`,`Spacecraft_id_spacecraft`),
+  ADD PRIMARY KEY (`id_astronaut`),
   ADD UNIQUE KEY `id_astronaut_UNIQUE` (`id_astronaut`),
   ADD KEY `fk_Astronauts_Spacecraft1_idx` (`Spacecraft_id_spacecraft`);
 
@@ -198,11 +214,11 @@ ALTER TABLE `Clients`
 -- Indexes for table `Missions`
 --
 ALTER TABLE `Missions`
-  ADD PRIMARY KEY (`id_mission`,`Clients_id_client`,`Spacecraft_id_spacecraft`),
+  ADD PRIMARY KEY (`id_mission`),
   ADD UNIQUE KEY `id_mission_UNIQUE` (`id_mission`),
   ADD UNIQUE KEY `name_UNIQUE` (`name`),
-  ADD KEY `fk_Missions_Clients1_idx` (`Clients_id_client`),
-  ADD KEY `fk_Missions_Spacecraft1_idx` (`Spacecraft_id_spacecraft`);
+  ADD KEY `fk_Missions_Spacecraft1_idx` (`Spacecraft_id_spacecraft`),
+  ADD KEY `fk_Missions_Clients1_idx` (`Clients_id_client`);
 
 --
 -- Indexes for table `Parts`
@@ -230,9 +246,9 @@ ALTER TABLE `Spacecraft`
 -- Indexes for table `Spacecraft_has_Parts`
 --
 ALTER TABLE `Spacecraft_has_Parts`
-  ADD PRIMARY KEY (`Spacecraft_id_spacecraft`,`Spacecraft_Planetary_Objects_id_planetary_object`,`Parts_id_part`),
+  ADD PRIMARY KEY (`Spacecraft_id_spacecraft`,`Parts_id_part`),
   ADD KEY `fk_Spacecraft_has_Parts_Parts1_idx` (`Parts_id_part`),
-  ADD KEY `fk_Spacecraft_has_Parts_Spacecraft1_idx` (`Spacecraft_id_spacecraft`,`Spacecraft_Planetary_Objects_id_planetary_object`);
+  ADD KEY `fk_Spacecraft_has_Parts_Spacecraft1_idx` (`Spacecraft_id_spacecraft`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -242,7 +258,7 @@ ALTER TABLE `Spacecraft_has_Parts`
 -- AUTO_INCREMENT for table `Astronauts`
 --
 ALTER TABLE `Astronauts`
-  MODIFY `id_astronaut` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_astronaut` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `Clients`
@@ -302,7 +318,7 @@ ALTER TABLE `Spacecraft`
 --
 ALTER TABLE `Spacecraft_has_Parts`
   ADD CONSTRAINT `fk_Spacecraft_has_Parts_Parts1` FOREIGN KEY (`Parts_id_part`) REFERENCES `Parts` (`id_part`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Spacecraft_has_Parts_Spacecraft1` FOREIGN KEY (`Spacecraft_id_spacecraft`,`Spacecraft_Planetary_Objects_id_planetary_object`) REFERENCES `Spacecraft` (`id_spacecraft`, `Planetary_Objects_id_planetary_object`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Spacecraft_has_Parts_Spacecraft1` FOREIGN KEY (`Spacecraft_id_spacecraft`) REFERENCES `Spacecraft` (`id_spacecraft`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
