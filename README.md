@@ -14,7 +14,7 @@
 
 
 # Schema Diagram
-![schema](https://user-images.githubusercontent.com/91037796/216858155-6701ad7b-b6e4-4ec1-a736-4e3f8f36662c.png)
+![image](https://user-images.githubusercontent.com/91037796/217623955-46c216ee-a5d6-4492-b7f7-6a7dc82b80b5.png)
 
 
 # Entity Relationship Diagram (ERD)
