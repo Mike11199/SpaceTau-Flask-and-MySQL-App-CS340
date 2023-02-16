@@ -22,23 +22,29 @@ mysql = MySQL(app)
 # Routes
 @app.route('/')
 def root():
-    query = "SELECT * FROM diagnostic;"
-    query1 = 'DROP TABLE IF EXISTS diagnostic;'
-    query2 = 'CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);'
-    query3 = 'INSERT INTO diagnostic (text) VALUES ("testing for final project!!")'
-    query4 = 'SELECT * FROM diagnostic;'
-    cur = mysql.connection.cursor()
-    cur.execute(query1)
-    cur.execute(query2)
-    cur.execute(query3)
-    cur.execute(query4)
-    results = cur.fetchall()
+    # query = "SELECT * FROM planets;"
+    # # query1 = 'DROP TABLE IF EXISTS diagnostic;'
+    # # query2 = 'CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);'
+    # # query3 = 'INSERT INTO diagnostic (text) VALUES ("testing for final project!!")'
+    # # query4 = 'SELECT * FROM diagnostic;'
+    # cur = mysql.connection.cursor()
+    # cur.execute(query)
+    # # cur.execute(query2)
+    # # cur.execute(query3)
+    # # cur.execute(query4)
+    # results = cur.fetchall()
 
-    return "<h1>MySQL Results" + str(results[0])
+    # return "<h1>MySQL Results" + str(results[0])
+    # return "<h1>MySQL Results" 
+    return render_template("main.jinja")
 
+
+@app.route('/spacecraft')
+def spacecraft_page():
+    return render_template("spacecraft.jinja")
 
 # Listener
 if __name__ == "__main__":
 
     #Start the app on port 3000, it will be different once hosted; changed to 6574 per tutorial video
-    app.run(port=6719, debug=True)
+    app.run(port=6728, debug=True)
