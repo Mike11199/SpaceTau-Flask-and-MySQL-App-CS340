@@ -1,3 +1,4 @@
+ 
  h1 {
     font-size: x-large;
     color: black;
@@ -91,11 +92,65 @@ td {
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 1);
 }
 
-.insertForm {
+.insertForm2 {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   min-height: 100vh;
   
+}
+
+.insertForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: rgba(124, 128, 136, 0.959);
+}
+
+.updateForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: rgba(124, 128, 136, 0.959);
+}
+
+.deleteForm {
+  display: none;
+  flex-direction: column;
+  flex-wrap: wrap;
+  position: fixed;
+  top: 12%;
+  left: 37%;
+  border: 3px solid black;
+  z-index: 9;
+  background-color: rgba(124, 128, 136, 0.959);
+  height: 300px;
+  width: 300px;
+  border-radius: 15px;
+  color: black;
+}
+
+.form-popup {
+  display: none;
+  flex-direction: column;
+  flex-wrap: wrap;
+  position: fixed;
+  top: 12%;
+  left: 37%;
+  border: 3px solid black;
+  z-index: 9;
+  background-color: rgba(124, 128, 136, 0.959);
+  height: 80%;
+  width: 27%;
+  border-radius: 15px;
+  color: black;
 }

@@ -2,9 +2,60 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 {# <link rel="stylesheet" type="text/css" href="styles.css"> #}
 <head>
-    <title>SpaceTau Database System</title>
+<title>SpaceTau Database System</title>
+
+
+{# https://jinja.palletsprojects.com/en/3.0.x/templates/#list-of-control-structures #}
+{% block javascript %}
+<script language="JavaScript">
+    
+    function showform(dowhat) {
+        /*
+        * four DIVS: browse, insert, update, delete
+        * this function sets one visible the others not
+        */
+        if (dowhat == 'insert'){
+            //document.getElementById('browse').style.display = 'none';
+            document.getElementById('insert').style.display = 'block';
+            document.getElementById('update').style.display = 'none';
+            document.getElementById('delete').style.display = 'none';
+        }
+        else if (dowhat == 'update'){
+            document.getElementById('browse').style.display = 'block';
+            document.getElementById('insert').style.display = 'none';
+            document.getElementById('update').style.display = 'block';
+            document.getElementById('delete').style.display = 'none';
+        }
+        else if (dowhat == 'delete'){
+            document.getElementById('browse').style.display = 'block';
+            document.getElementById('insert').style.display = 'none';
+            document.getElementById('update').style.display = 'none';
+            document.getElementById('delete').style.display = 'block';
+        }
+    else if (dowhat == 'all'){
+            document.getElementById('browse').style.display = 'block';
+            document.getElementById('insert').style.display = 'block';
+            document.getElementById('update').style.display = 'block';
+            document.getElementById('delete').style.display = 'block';
+        }
+        else { //by default display browse
+            document.getElementById('browse').style.display = 'block';
+            document.getElementById('insert').style.display = 'none';
+            document.getElementById('update').style.display = 'none';
+            document.getElementById('delete').style.display = 'none';
+        }
+    }
+    function newClient() { showform('insert'); }
+    function updateClient(pid) { showform('update'); }
+    function deleteClient(pid) { showform ('delete'); }
+    function browseClient() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+
+</script>
+{% endblock %}
+
 </head>
-<body>
+<body onload="browseClient()">
     <div className="nav_component">
 
     </div>
@@ -12,7 +63,36 @@
     <h1>SpaceTau Database System - Clients Page</h1>
     
     <p>Clients page.</p>
-    
+
+        <button onclick="newClient() " class="add_button">Add a Mission</button>
+
+
+    {# FORM FOR ADDING A CLIENT - Toggled by a Button above or below the table - TODO #}
+    <div id="insert" class="insertForm">
+        <form method="POST" id="addPart">
+            <legend><strong>Add Part</strong></legend>
+            <fieldset class="fields">
+                <label> Name </label> <input type="text" name="name">
+                <label> Manufacturer </label> <input type="text" name="manufacturer">
+                <label> Mass (kg) </label> <input type="number" name="mass">
+                <label> Cost </label> <input type="number" name="cost">
+                <label> Part Description </label> <input type="text" name="description">
+                {# <label> Homeworld </label> <select name="homeworld">
+                    <option value="0">&nbsp;</option>
+                    <option value="1">Gemenon</option>
+                    <option value="2">Leonis</option>
+                    <option value="3">Caprica</option>
+                    </select>
+                <label> age </label> <input type="text" name="age"> #}
+        </fieldset>
+            <input class="btn" type="submit" id="addPart" value="Add Part">
+            <input class="btn" type="button" value="cancel" onClick="browsePart()">
+        </form> 
+    </div>
+
+
+    {# TABLE FOR SELECT STATEMENT #}    
+      <div id="browse" style="display: block">
       <table>
         <thead>
         <tr>
@@ -55,6 +135,7 @@
         <tbody>            
         </tbody>
     </table>
+    </div>
 
 
 </body>

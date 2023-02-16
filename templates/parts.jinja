@@ -21,13 +21,13 @@
             document.getElementById('delete').style.display = 'none';
         }
         else if (dowhat == 'update'){
-            document.getElementById('browse').style.display = 'none';
+            document.getElementById('browse').style.display = 'block';
             document.getElementById('insert').style.display = 'none';
             document.getElementById('update').style.display = 'block';
             document.getElementById('delete').style.display = 'none';
         }
         else if (dowhat == 'delete'){
-            document.getElementById('browse').style.display = 'none';
+            document.getElementById('browse').style.display = 'block';
             document.getElementById('insert').style.display = 'none';
             document.getElementById('update').style.display = 'none';
             document.getElementById('delete').style.display = 'block';
@@ -69,6 +69,74 @@
 
     <button onclick="newPart() " class="add_button">Add a Part</button>
 
+    {# FORM FOR ADDING A PART - Always Visible or Toggled by a Button above or below the table - TODO #}
+    <div id="insert" class="insertForm">
+        <form method="POST" id="addPart">
+            <legend><strong>Add Part</strong></legend>
+            <fieldset class="fields">
+                <label> Name </label> <input type="text" name="name">
+                <label> Manufacturer </label> <input type="text" name="manufacturer">
+                <label> Mass (kg) </label> <input type="number" name="mass">
+                <label> Cost </label> <input type="number" name="cost">
+                <label> Part Description </label> <input type="text" name="description">
+                {# <label> Homeworld </label> <select name="homeworld">
+                    <option value="0">&nbsp;</option>
+                    <option value="1">Gemenon</option>
+                    <option value="2">Leonis</option>
+                    <option value="3">Caprica</option>
+                    </select>
+                <label> age </label> <input type="text" name="age"> #}
+        </fieldset>
+            <input class="btn" type="submit" id="addPart" value="Add Part">
+            <input class="btn" type="button" value="cancel" onClick="browsePart()">
+        </form> 
+    </div>
+    
+    <p>&nbsp;</p>
+
+    {# FORM FOR UPDATING A PART - This becomes visible when the EDIT BUTTON on a record is clicked #}
+    <div id="update" class="updateForm">
+        <form method="POST" id="updatePart">
+            <legend><strong>Update Person</strong></legend>
+            <fieldset class="fields">
+            <input type="hidden" name="personID" id="updatepersonID" value="1">
+            <label> ID: </label> 1
+                <label> first name </label> <input type="text" name="fname" value="William">
+                <label> last name </label> <input type="text" name="lname" value="Adama">
+                <label> Homeworld </label> <select name="homeworld">
+                    <option value="0">&nbsp;</option>
+                    <option value="1" selected>Gemenon</option>
+                    <option value="2">Leonis</option>
+                    <option value="3">Caprica</option>
+                    </select>
+                <label> age </label> <input type="text" name="age" value="61">
+        </fieldset>
+            <input class="btn" type="submit" id="UpdateSavePerson" value="Save Update Person">
+            <input class="btn" type="button" value="cancel" onClick="browsePart()">
+        </form> 
+    </div>
+
+    <p>&nbsp;</p>
+
+
+    {# FORM FOR DELETING A PART - This becomes visible when the DELETE BUTTON on a record is clicked #}
+    <div id="delete" style="display: block" class="deleteForm">
+        <form method="POST" id="deletePart">
+            <legend><strong>Delete Part</strong></legend>
+                <fieldset class="fields">
+                <p>Are you sure you wish to delete the following?</p>
+                <input type="hidden" name="personID" id="deletepersonID" value="1">
+                <label><strong>ID:</strong></label> 1
+                    <label> <strong>Name</strong> </label> William Adama
+                    
+            </fieldset>
+            <input class="btn" type="submit" id="DeletePerson" value="Delete Person">
+                <input class="btn" type="button" value="cancel" onClick="browsePart()">
+        </form> 
+    </div>
+
+
+    {# TABLE FOR SELECT STATEMENT #}
     <div id="browse" style="display: block">
         <table>
             <thead>
@@ -98,71 +166,7 @@
         </table>
     </div>
 
-    {# FORM FOR ADDING A PART - Always Visible or Toggled by a Button above or below the table - TODO #}
-    <div id="insert" class="insertForm">
-        <form method="POST" id="addPart">
-            <legend><strong>Add Part</strong></legend>
-            <fieldset class="fields">
-                <label> Name </label> <input type="text" name="name">
-                <label> Manufacturer </label> <input type="text" name="manufacturer">
-                <label> Mass (kg) </label> <input type="number" name="mass">
-                <label> Cost </label> <input type="number" name="cost">
-                <label> Part Description </label> <input type="text" name="description">
-                {# <label> Homeworld </label> <select name="homeworld">
-                    <option value="0">&nbsp;</option>
-                    <option value="1">Gemenon</option>
-                    <option value="2">Leonis</option>
-                    <option value="3">Caprica</option>
-                    </select>
-                <label> age </label> <input type="text" name="age"> #}
-        </fieldset>
-            <input class="btn" type="submit" id="addPart" value="Add Part">
-            <input class="btn" type="button" value="cancel" onClick="browsePart()">
-        </form> 
-    </div>
-    
-    <p>&nbsp;</p>
 
-    {# FORM FOR UPDATING A PART - This becomes visible when the EDIT BUTTON on a record is clicked #}
-    <div id="update">
-        <form method="POST" id="updatePart">
-            <legend><strong>Update Person</strong></legend>
-            <fieldset class="fields">
-            <input type="hidden" name="personID" id="updatepersonID" value="1">
-            <label> ID: </label> 1
-                <label> first name </label> <input type="text" name="fname" value="William">
-                <label> last name </label> <input type="text" name="lname" value="Adama">
-                <label> Homeworld </label> <select name="homeworld">
-                    <option value="0">&nbsp;</option>
-                    <option value="1" selected>Gemenon</option>
-                    <option value="2">Leonis</option>
-                    <option value="3">Caprica</option>
-                    </select>
-                <label> age </label> <input type="text" name="age" value="61">
-        </fieldset>
-            <input class="btn" type="submit" id="UpdateSavePerson" value="Save Update Person">
-            <input class="btn" type="button" value="cancel" onClick="browsePart()">
-        </form> 
-    </div>
-
-    <p>&nbsp;</p>
-
-
-    {# FORM FOR DELETING A PART - This becomes visible when the DELETE BUTTON on a record is clicked #}
-    <div id="delete" style="display: block">
-        <form method="POST" id="deletePart">
-            <legend><strong>Delete Part</strong></legend>
-                <fieldset class="fields">
-                <p>Are you sure you wish to delete the following?</p>
-                <input type="hidden" name="personID" id="deletepersonID" value="1">
-                <label><strong>ID:</strong></label> 1
-                    <label> <strong>Name</strong> </label> William Adama
-                    
-            </fieldset>
-            <input class="btn" type="submit" id="DeletePerson" value="Delete Person">
-                <input class="btn" type="button" value="cancel" onClick="browsePart()">
-        </form> 
-    </div>
     
 </body>
 </html>
