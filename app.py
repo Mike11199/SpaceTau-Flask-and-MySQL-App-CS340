@@ -43,6 +43,27 @@ def root():
 def spacecraft_page():
     return render_template("spacecraft.jinja")
 
+@app.route('/missions')
+def missions_page():
+    return render_template("missions.jinja")
+
+@app.route('/parts')
+def parts_page():
+    return render_template("parts.jinja")
+
+@app.route('/astronauts')
+def astronauts_page():
+    return render_template("astronauts.jinja")
+
+@app.route('/clients')
+def clients_page():
+    return render_template("clients.jinja")
+
+@app.route('/planetary-objects')
+def planetary_objects_page():
+    return render_template("planetary_objects.jinja")
+
+
 # Listener
 if __name__ == "__main__":
 

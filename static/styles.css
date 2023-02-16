@@ -8,7 +8,6 @@
     color: black;
  }
 
-
  body {       
   color:black;
   background-color: whitesmoke;
@@ -16,20 +15,19 @@
 }
 
 
-  .Menu_Link{
-    color: whitesmoke;
+a {
+    color: black;
+    font-weight: 600;
     text-decoration: none;  /*Get rid of underline*/
     margin-left: 30px;
-    margin-right: 30px;
-    font-weight: 500;
-    
-  }
-  .Menu_Link:hover{
+    margin-right: 30px;    
+}
+
+a:hover{
     color: rgb(17, 17, 231);
     font-weight: 600;
-  
-  }
-  .Menu_Link:active{
+}
+
+a:active{
     color: rgb(39, 9, 158);
-  }
-  
+}
