@@ -31,3 +31,33 @@ a:hover{
 a:active{
     color: rgb(39, 9, 158);
 }
+
+table {
+    margin-top: 35px;
+    border-collapse: collapse;
+    border: 2px solid black;
+    width: 40%;
+    padding: 0px;
+  }
+
+  tr:nth-child(even){
+    background-color: rgb(196, 196, 199);
+  }
+  
+
+thead {
+  background-color: #0e3d52;
+  color: whitesmoke;
+  border: 2px solid black;
+  font-weight: 100;
+  }
+
+th {
+  padding: 10px 10px;
+  border: 2px solid black;
+}
+
+td {
+  padding: 5px 5px;
+  border: 2px solid black;
+}
