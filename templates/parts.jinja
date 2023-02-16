@@ -2,43 +2,167 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 {# <link rel="stylesheet" type="text/css" href="styles.css"> #}
 <head>
-    <title>SpaceTau Database System</title>
+<title>SpaceTau Database System</title>
+
+
+{# https://jinja.palletsprojects.com/en/3.0.x/templates/#list-of-control-structures #}
+{% block javascript %}
+<script language="JavaScript">
+    
+    function showform(dowhat) {
+        /*
+        * four DIVS: browse, insert, update, delete
+        * this function sets one visible the others not
+        */
+        if (dowhat == 'insert'){
+            //document.getElementById('browse').style.display = 'none';
+            document.getElementById('insert').style.display = 'block';
+            document.getElementById('update').style.display = 'none';
+            document.getElementById('delete').style.display = 'none';
+        }
+        else if (dowhat == 'update'){
+            document.getElementById('browse').style.display = 'none';
+            document.getElementById('insert').style.display = 'none';
+            document.getElementById('update').style.display = 'block';
+            document.getElementById('delete').style.display = 'none';
+        }
+        else if (dowhat == 'delete'){
+            document.getElementById('browse').style.display = 'none';
+            document.getElementById('insert').style.display = 'none';
+            document.getElementById('update').style.display = 'none';
+            document.getElementById('delete').style.display = 'block';
+        }
+    else if (dowhat == 'all'){
+            document.getElementById('browse').style.display = 'block';
+            document.getElementById('insert').style.display = 'block';
+            document.getElementById('update').style.display = 'block';
+            document.getElementById('delete').style.display = 'block';
+        }
+        else { //by default display browse
+            document.getElementById('browse').style.display = 'block';
+            document.getElementById('insert').style.display = 'none';
+            document.getElementById('update').style.display = 'none';
+            document.getElementById('delete').style.display = 'none';
+        }
+    }
+    function newPart() { showform('insert'); }
+    function updatePart(pid) { showform('update'); }
+    function deletePart(pid) { showform ('delete'); }
+    function browsePart() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+
+</script>
+{% endblock %}
+
 </head>
-<body>
+<body onload="browsePart()">
     <div className="nav_component">
 
     </div>
     [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/missions">Missions</a> | <a href="/parts">Parts</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
     <h1>SpaceTau Database System - Parts Page</h1>
     
-    <p>Parts page.</p>
+    <p>This page displays the various parts in the database.  Click the 'edit' or 'delete' button next to a row to modify a part. Deleting a part will also modify any spacecraft that contain that part.</p>
+    <p>Parts are involved in a M:N relationship with spacecraft.  A part can be found in many spacecraft, and a spacecraft can consist of many parts.</p>
+    <p>Click the 'add' button to below to insert a new part into the database.</p>
 
-          <table>
-        <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Manufacturer</th>
-            <th scope="col">Mass (kg)</th>
-            <th scope="col">Cost</th>            
-            <th scope="col">Part Description</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-        </tr>        
-        </thead>
-        <tr>
-            <td align="center" >1</td>
-            <td >Roll Out Solar Array (ROSA)</td>
-            <td>Redwire</td>
-            <td>325.00</td>
-            <td>1700000.00</td>
-            <td>120 KW solar array that is 20 percent lighter and 1/4th the volume of rigid panel arrays.  https://spaceflightnow.com/2022/12/03/iss-eva-82/#:~:text=NASA%20is%20upgrading%20the%20space,station\'s%20eight%20original%20solar%20panels.</td>
-            <td><a href="#" onClick="updatePerson('this.personID')">Edit</a></td>
-            <td><a href="#" onclick="deletePerson('this.personID')">Delete</a></td>
-        </tr>
-        <tbody>            
-        </tbody>
-    </table>
+
+    <button onclick="newPart() " class="add_button">Add a Part</button>
+
+    <div id="browse" style="display: block">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Manufacturer</th>
+                <th scope="col">Mass (kg)</th>
+                <th scope="col">Cost</th>            
+                <th scope="col">Part Description</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>        
+            </thead>
+            <tr>
+                <td align="center" >1</td>
+                <td >Roll Out Solar Array (ROSA)</td>
+                <td>Redwire</td>
+                <td>325.00</td>
+                <td>1700000.00</td>
+                <td>120 KW solar array that is 20 percent lighter and 1/4th the volume of rigid panel arrays. </td>
+                <td><a href="#" onClick="updatePart('this.personID')">Edit</a></td>
+                <td><a href="#" onclick="deletePart('this.personID')">Delete</a></td>
+            </tr>
+            <tbody>            
+            </tbody>
+        </table>
+    </div>
+
+    {# FORM FOR ADDING A PART - Always Visible or Toggled by a Button above or below the table - TODO #}
+    <div id="insert" class="insertForm">
+        <form method="POST" id="addPart">
+            <legend><strong>Add Part</strong></legend>
+            <fieldset class="fields">
+                <label> Name </label> <input type="text" name="name">
+                <label> Manufacturer </label> <input type="text" name="manufacturer">
+                <label> Mass (kg) </label> <input type="number" name="mass">
+                <label> Cost </label> <input type="number" name="cost">
+                <label> Part Description </label> <input type="text" name="description">
+                {# <label> Homeworld </label> <select name="homeworld">
+                    <option value="0">&nbsp;</option>
+                    <option value="1">Gemenon</option>
+                    <option value="2">Leonis</option>
+                    <option value="3">Caprica</option>
+                    </select>
+                <label> age </label> <input type="text" name="age"> #}
+        </fieldset>
+            <input class="btn" type="submit" id="addPart" value="Add Part">
+            <input class="btn" type="button" value="cancel" onClick="browsePart()">
+        </form> 
+    </div>
+    
+    <p>&nbsp;</p>
+
+    {# FORM FOR UPDATING A PART - This becomes visible when the EDIT BUTTON on a record is clicked #}
+    <div id="update">
+        <form method="POST" id="updatePart">
+            <legend><strong>Update Person</strong></legend>
+            <fieldset class="fields">
+            <input type="hidden" name="personID" id="updatepersonID" value="1">
+            <label> ID: </label> 1
+                <label> first name </label> <input type="text" name="fname" value="William">
+                <label> last name </label> <input type="text" name="lname" value="Adama">
+                <label> Homeworld </label> <select name="homeworld">
+                    <option value="0">&nbsp;</option>
+                    <option value="1" selected>Gemenon</option>
+                    <option value="2">Leonis</option>
+                    <option value="3">Caprica</option>
+                    </select>
+                <label> age </label> <input type="text" name="age" value="61">
+        </fieldset>
+            <input class="btn" type="submit" id="UpdateSavePerson" value="Save Update Person">
+            <input class="btn" type="button" value="cancel" onClick="browsePart()">
+        </form> 
+    </div>
+
+    <p>&nbsp;</p>
+
+
+    {# FORM FOR DELETING A PART - This becomes visible when the DELETE BUTTON on a record is clicked #}
+    <div id="delete" style="display: block">
+        <form method="POST" id="deletePart">
+            <legend><strong>Delete Part</strong></legend>
+                <fieldset class="fields">
+                <p>Are you sure you wish to delete the following?</p>
+                <input type="hidden" name="personID" id="deletepersonID" value="1">
+                <label><strong>ID:</strong></label> 1
+                    <label> <strong>Name</strong> </label> William Adama
+                    
+            </fieldset>
+            <input class="btn" type="submit" id="DeletePerson" value="Delete Person">
+                <input class="btn" type="button" value="cancel" onClick="browsePart()">
+        </form> 
+    </div>
     
 </body>
 </html>
