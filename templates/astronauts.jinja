@@ -59,33 +59,31 @@
     <div className="nav_component">
 
     </div>
-   [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/missions">Missions</a> | <a href="/parts">Parts</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
+      [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/parts">Parts</a> | <a href="/parts-and-spacecraft">Spacecaft/Parts Intersection Table</a>  | <a href="/missions">Missions</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
     <h1>SpaceTau Database System - Astronauts Page</h1>
     
     <p>Astronauts page.</p>
 
-    <button onclick="newAstronaut() " class="add_button">Add a Part</button>
+    <button onclick="newAstronaut() " class="add_button">Add an Astronaut</button>
 
     {# FORM FOR ADDING A ASTRONAUT - Always Visible or Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
-        <form method="POST" id="addPart">
-            <legend><strong>Add Part</strong></legend>
+        <form method="POST" id="addAstronaut">
+            <legend><strong>Add Astronaut</strong></legend>
             <fieldset class="fields">
                 <label> Name </label> <input type="text" name="name">
-                <label> Manufacturer </label> <input type="text" name="manufacturer">
-                <label> Mass (kg) </label> <input type="number" name="mass">
-                <label> Cost </label> <input type="number" name="cost">
-                <label> Part Description </label> <input type="text" name="description">
-                {# <label> Homeworld </label> <select name="homeworld">
-                    <option value="0">&nbsp;</option>
-                    <option value="1">Gemenon</option>
-                    <option value="2">Leonis</option>
-                    <option value="3">Caprica</option>
+                <label> Age </label> <input type="number" name="age">
+                <label> Gender </label> <input type="text" name="gender">
+                <label> Mission Role </label> <input type="text" name="mission_role">
+                <label> Spacecraft Name (Optional) </label>
+                    <select name="spacecraft_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Lunar Gateway</option>
+                        <option value="2">Crew Capsule I</option>
                     </select>
-                <label> age </label> <input type="text" name="age"> #}
         </fieldset>
-            <input class="btn" type="submit" id="addPart" value="Add Part">
-            <input class="btn" type="button" value="cancel" onClick="browsePart()">
+            <input class="submit_button" type="submit" id="addAstronaut" value="Add Astronaut">
+            <input class="cancel_button" type="button" value="Cancel" onClick="browseAstronaut()">
         </form> 
     </div>
     
@@ -125,7 +123,7 @@
             <td><a href="#" onclick="deletePerson('this.personID')">Delete</a></td>
         </tr>
         <tr>
-            <td align="center" >1</td>
+            <td align="center" >3</td>
             <td >Kayla Barron</td>
             <td align="right" >35</td>
             <td>Female</td>

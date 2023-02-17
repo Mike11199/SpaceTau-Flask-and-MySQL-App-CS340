@@ -59,43 +59,37 @@
     <div className="nav_component">
 
     </div>
-     [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/parts">Parts</a> | <a href="/parts-and-spacecraft">Spacecaft/Parts Intersection Table</a>  | <a href="/missions">Missions</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
-    <h1>SpaceTau Database System - Parts Page</h1>
+      [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/parts">Parts</a> | <a href="/parts-and-spacecraft">Spacecaft/Parts Intersection Table</a>  | <a href="/missions">Missions</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
+    <h1>SpaceTau Database System - Spacecraft/Parts Intersection Table Page</h1>
     
-    <p>This page displays the various parts in the database.  Click the 'edit' or 'delete' button next to a row to modify a part. Deleting a part will also modify any spacecraft that contain that part.</p>
+    <p>This page displays the relationships between parts and spacecraft in the database.</p>
     <p>Parts are involved in a M:N relationship with spacecraft.  A part can be found in many spacecraft, and a spacecraft can consist of many parts.</p>
-    <p>Click the 'add' button to below to insert a new part into the database.</p>
+    <p>Click the 'add' button to below to insert a new part/spacecraft association into the database.</p>
 
 
-    <button onclick="newPart() " class="add_button">Add a Part</button>
+    <button onclick="newPart() " class="add_button">Add a SpaceCraft/Part Relationship</button>
 
     {# FORM FOR ADDING A PART - Always Visible or Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
         <form method="POST" id="addPart">
-            <legend><strong>Add Part</strong></legend>
+            <legend><strong>Add Spacecaft/Part Relationship</strong></legend>
             <fieldset class="fields">
-                <label> Name </label> <input type="text" name="name">
-                <label> Manufacturer </label> <input type="text" name="manufacturer">
-                <label> Mass (kg) </label> <input type="number" name="mass">
-                <label> Cost </label> <input type="number" name="cost">
-                <p></p>
-                {# <label> Part Description </label> <input type="textarea" name="description" class="largeTextBox"> #}
-                <div class="largeTextBox">
-                    <label> Part Description  </label> 
-                    <p></p>
-                    <textarea name = "description" >
-                    Enter details here...
-                    </textarea>
-                </div>
-                {# <label> Homeworld </label> <select name="homeworld">
-                    <option value="0">&nbsp;</option>
-                    <option value="1">Gemenon</option>
-                    <option value="2">Leonis</option>
-                    <option value="3">Caprica</option>
+                <label> Part Name </label> 
+                    <select name="part_name">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Roll Out Solar Array (ROSA)</option>
+                        <option value="2">Reaction Wheel</option>
+                        <option value="3">Xenon Engine</option>
                     </select>
-                <label> age </label> <input type="text" name="age"> #}
+                <label> Spacecaft Name </label> 
+                    <select name="spacecraft_name">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Lunar Gateway</option>
+                        <option value="2">Garmin Satellite</option>
+                        <option value="3">Sentry Satellite</option>
+                    </select>                    
         </fieldset>
-            <input class="submit_button" type="submit" id="addPart" value="Add Part">
+            <input class="submit_button" type="submit" id="addSpacecraft-Part-Relationship" value="Add M:N Relationship">
             <input class="cancel_button" type="button" value="Cancel" onClick="browsePart()">
         </form> 
     </div>
@@ -135,11 +129,8 @@
                 <p>Are you sure you wish to delete the following?</p>
                 <input type="hidden" name="personID" id="deletepersonID" value="1">
                 <label><strong>ID:</strong></label> 1
-                <label> <strong>Name:</strong> </label> Roll Out Solar Array (ROSA)
-                <label> <strong>Manufacturer:</strong> </label> Redwire
-                <label> <strong>Mass (kg):</strong> </label> 325.00
-                <label> <strong>Cost:</strong> </label> 1700000.00
-                <label> <strong>Part Description:</strong> </label> 120 KW solar array that is 20 percent lighter and 1/4th the volume of rigid panel arrays.        
+                    <label> <strong>Name</strong> </label> William Adama
+                    
             </fieldset>
             <input class="btn" type="submit" id="DeletePerson" value="Delete Person">
                 <input class="btn" type="button" value="cancel" onClick="browsePart()">
@@ -152,26 +143,30 @@
         <table>
             <thead>
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Manufacturer</th>
-                <th scope="col">Mass (kg)</th>
-                <th scope="col">Cost</th>            
-                <th scope="col">Part Description</th>
+                <th scope="col">Spacecaft ID</th>
+                <th scope="col">SpaceCraft Name</th>
+                <th scope="col">Part ID</th>
+                <th scope="col">Part Name</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
             </tr>        
             </thead>
             <tr>
                 <td align="center" >1</td>
+                <td >Lunar Gateway</td>
+                <td align="center" >1</td>
                 <td >Roll Out Solar Array (ROSA)</td>
-                <td>Redwire</td>
-                <td>325.00</td>
-                <td>1700000.00</td>
-                <td>120 KW solar array that is 20 percent lighter and 1/4th the volume of rigid panel arrays. </td>
                 <td><a href="#" onClick="updatePart('this.personID')">Edit</a></td>
                 <td><a href="#" onclick="deletePart('this.personID')">Delete</a></td>
             </tr>
+            <tr>
+                <td align="center" >2</td>
+                <td >Garmin Satellite</td>
+                <td align="center" >1</td>
+                <td >Roll Out Solar Array (ROSA)</td>
+                <td><a href="#" onClick="updatePart('this.personID')">Edit</a></td>
+                <td><a href="#" onclick="deletePart('this.personID')">Delete</a></td>                
+            </tr>            
             <tbody>            
             </tbody>
         </table>

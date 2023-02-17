@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from flask import request
 import os
 
+
 USER_NAME = os.getenv("USER_NAME")
 PASSWORD_LAST_4_DIGITS_STUDENT_ID = os.getenv("ONID_LAST_4")
 
@@ -49,6 +50,11 @@ def missions_page():
 
 @app.route('/parts')
 def parts_page():
+    # query = "SELECT * FROM parts;"
+    # cur = mysql.connection.cursor()
+    # cur.execute(query)
+    # results = cur.fetchall()    
+    # print(results)   
     return render_template("parts.jinja")
 
 @app.route('/astronauts')
@@ -62,6 +68,10 @@ def clients_page():
 @app.route('/planetary-objects')
 def planetary_objects_page():
     return render_template("planetary_objects.jinja")
+
+@app.route('/parts-and-spacecraft')
+def parts_and_spacecraft_page():
+    return render_template("parts_and_spacecraft.jinja")
 
 
 # Listener
