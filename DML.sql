@@ -58,6 +58,12 @@ VALUES (:name, :surface_gravity_g, :avg_distance_from_sun_au, :is_planet, :is_mo
 INSERT INTO Parts (name, manufacturer, mass_kg, cost, part_description)
 VALUES (:name, :manufacturer, :mass_kg, :cost, :part_description);
 
+--INSERT into intersection table Spacecraft_has_parts
+INSERT INTO Spacecraft_has_Parts (id_spacecraft, id_part)
+SELECT s.id_spacecraft, p.id_part
+FROM Spacecrafts s, Parts p
+WHERE s.id_spacecraft = :id_spacecraft and p.id_part = :id_part;
+
 --add Astronaut to spacecraft
 UPDATE Astronauts
 SET id_spacecraft = :id_input
