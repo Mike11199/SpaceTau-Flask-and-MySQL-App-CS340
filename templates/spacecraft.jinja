@@ -59,33 +59,100 @@
     <div className="nav_component">
 
     </div>
-   [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/missions">Missions</a> | <a href="/parts">Parts</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
+    [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/parts">Parts</a> | <a href="/parts-and-spacecraft">Spacecaft/Parts Intersection Table</a>  | <a href="/missions">Missions</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
     <h1>SpaceTau Database System - Spacecraft Page</h1>
     
     <p>Spacecraft page.</p>
 
-    <button onclick="newSpacecraft() " class="add_button">Add a Part</button>
+    <button onclick="newSpacecraft() " class="add_button">Add a Spacecraft</button>
 
     {# FORM FOR ADDING A SPACECRAFT - Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
-        <form method="POST" id="addPart">
-            <legend><strong>Add Part</strong></legend>
+        <form method="POST" id="addSpacecraft">
+            <legend><strong>Add Spacecraft</strong></legend>
             <fieldset class="fields">
                 <label> Name </label> <input type="text" name="name">
-                <label> Manufacturer </label> <input type="text" name="manufacturer">
-                <label> Mass (kg) </label> <input type="number" name="mass">
-                <label> Cost </label> <input type="number" name="cost">
-                <label> Part Description </label> <input type="text" name="description">
-                {# <label> Homeworld </label> <select name="homeworld">
-                    <option value="0">&nbsp;</option>
-                    <option value="1">Gemenon</option>
-                    <option value="2">Leonis</option>
-                    <option value="3">Caprica</option>
+                <label> In Orbit? </label> 
+                    <select name="in_orbit">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Yes</option>
+                        <option value="2">No</option>
                     </select>
-                <label> age </label> <input type="text" name="age"> #}
+                <label> Launched? </label> 
+                    <select name="in_orbit">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Yes</option>
+                        <option value="2">No</option>
+                    </select>
+                <label> Sphere of Influcence </label> 
+                    <select name="sphere_of_influence">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Mercury</option>
+                        <option value="2">Venus</option>
+                        <option value="3">Earth</option>
+                    </select>
+                    
+                <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining">
         </fieldset>
-            <input class="btn" type="submit" id="addPart" value="Add Part">
-            <input class="btn" type="button" value="cancel" onClick="browsePart()">
+            <input class="submit_button" type="submit" id="addSpacecraft" value="Add Spacecraft">
+            <input class="cancel_button" type="button" value="Cancel" onClick="browseSpacecraft()">
+        </form> 
+    </div>
+
+
+
+    {# FORM FOR UPDATING A SPACECRAFT - This becomes visible when the EDIT BUTTON on a record is clicked #}
+    <div id="update" class="updateForm">
+        <form method="POST" id="updateSpacecraft">
+            <legend><strong>Update Spacecaft</strong></legend>
+            <fieldset class="fields">
+            <input type="hidden" name="spacecraftID" id="updatespacecraftID" value="1">
+            <label> ID: </label> 1
+            <label> Name </label> <input type="text" name="name" value="Garmin GPS Satellite 34">
+                <label> In Orbit? </label> 
+                    <select name="in_orbit">
+                        <option value="0">&nbsp;</option>
+                        <option value="1" selected>Yes</option>
+                        <option value="2">No</option>
+                    </select>
+                <label> Launched? </label> 
+                    <select name="in_orbit">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Yes</option>
+                        <option value="2" selected>No</option>
+                    </select>
+                <label> Sphere of Influcence </label> 
+                    <select name="sphere_of_influence">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Mercury</option>
+                        <option value="2">Venus</option>
+                        <option value="3" selected>Earth</option>
+                    </select>
+                    
+                <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining" value="500.00">
+                <label> Mission Elapsed Time - Days (MET) </label> <input type="number" name="delta_v_remaining" value="43">
+        </fieldset>
+            <input class="submit_button" type="submit" id="UpdateSaveSpacecraft" value="Save Updated Spacecraft">
+            <input class="cancel_button" type="button" value="cancel" onClick="browseSpacecraft()">
+        </form> 
+    </div>
+
+    {# FORM FOR DELETING A PART - This becomes visible when the DELETE BUTTON on a record is clicked #}
+    <div id="delete" style="display: block" class="deleteForm">
+        <form method="POST" id="deleteSpacecraft">
+            <legend><strong>Delete Spacecaft</strong></legend>
+                <fieldset class="fields">
+                <p>Are you sure you wish to delete the following?</p>
+                <input type="hidden" name="spacecraftID" id="deletespacecraftID" value="1">
+                <label><strong>ID:</strong></label> 1
+                <label> <strong>Name:</strong> </label> Garmin GPS Satellite 34
+                <label> <strong>In Orbit?:</strong> </label> Yes
+                <label> <strong>Launched?:</strong> </label> Yes
+                <label> <strong>Delta V Remaining:</strong> </label> 500.00
+                <label> <strong>Mission Elapsed Time Days</strong> </label> 43
+            </fieldset>
+            <input class="submit_button" type="submit" id="DeletePerson" value="Delete Spacecraft">
+                <input class="cancel_button" type="button" value="cancel" onClick="browseSpacecraft()">
         </form> 
     </div>
 

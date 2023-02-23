@@ -59,7 +59,7 @@
     <div className="nav_component">
 
     </div>
-    [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/missions">Missions</a> | <a href="/parts">Parts</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
+      [ <a href="/">Home</a> |<a href="/spacecraft">Spacecraft</a> | <a href="/parts">Parts</a> | <a href="/parts-and-spacecraft">Spacecaft/Parts Intersection Table</a>  | <a href="/missions">Missions</a> | <a href="/astronauts">Astronauts</a> | <a href="/clients">Clients</a> | <a href="/planetary-objects">Planetary Objects</a> ]
     <h1>SpaceTau Database System - Missions Page</h1>
     
     <p>Missions page.</p>
@@ -69,24 +69,38 @@
 
     {# FORM FOR ADDING A MISSION - Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
-        <form method="POST" id="addPart">
-            <legend><strong>Add Part</strong></legend>
+        <form method="POST" id="addMission">
+            <legend><strong>Add Mission</strong></legend>
             <fieldset class="fields">
                 <label> Name </label> <input type="text" name="name">
-                <label> Manufacturer </label> <input type="text" name="manufacturer">
-                <label> Mass (kg) </label> <input type="number" name="mass">
-                <label> Cost </label> <input type="number" name="cost">
-                <label> Part Description </label> <input type="text" name="description">
-                {# <label> Homeworld </label> <select name="homeworld">
-                    <option value="0">&nbsp;</option>
-                    <option value="1">Gemenon</option>
-                    <option value="2">Leonis</option>
-                    <option value="3">Caprica</option>
+                <label> Contract Revenues </label> <input type="number" name="contract_revenues">
+                <label> Contract Costs </label> <input type="number" name="contract_revenues">                
+                <label> External Contract? </label> 
+                    <select name="external_contract">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Yes</option>
+                        <option value="2">No</option>
                     </select>
-                <label> age </label> <input type="text" name="age"> #}
+
+                {# TODO:  client/spacecraft name needs to be drop downs populated by select statements  #}
+                <label> Spacecraft Name (optional) </label> 
+                    <select name="spacecraft_name">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Spacecaft 1</option>
+                        <option value="2">Spacecaft 2</option>
+                        <option value="3">Spacecaft 3</option>
+                    </select>
+                <label> Client Name (optional) </label> 
+                    <select name="client_name">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Client 1</option>
+                        <option value="2">Client 2</option>
+                        <option value="3">Client 3</option>
+                    </select>
+
         </fieldset>
-            <input class="btn" type="submit" id="addPart" value="Add Part">
-            <input class="btn" type="button" value="cancel" onClick="browsePart()">
+            <input class="submit_button" type="submit" id="addMission" value="Add Mission">
+            <input class="cancel_button" type="button" value="Cancel" onClick="browseMission()">
         </form> 
     </div>
 
@@ -118,8 +132,8 @@
             <td>A mission to launch a satellite for the Garmin GPS network into a geosynchronous orbit around Earth.</td>
             <td>Garmin GPS Satellite 34</td>
             <td>Garmin</td>
-            <td><a href="#" onClick="updatePerson('this.personID')">Edit</a></td>
-            <td><a href="#" onclick="deletePerson('this.personID')">Delete</a></td>
+            <td><a href="#" onClick="updateMission('this.missionID')">Edit</a></td>
+            <td><a href="#" onclick="deleteMission('this.missionID')">Delete</a></td>
         </tr>       
         <tbody>            
         </tbody>
