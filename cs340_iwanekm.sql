@@ -342,8 +342,8 @@ ALTER TABLE `Spacecrafts`
 -- Constraints for table `Spacecraft_has_Parts`
 --
 ALTER TABLE `Spacecraft_has_Parts`
-  ADD CONSTRAINT `fk_Spacecraft_has_Parts_Parts1` FOREIGN KEY (`id_part`) REFERENCES `Parts` (`id_part`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Spacecraft_has_Parts_Spacecraft1` FOREIGN KEY (`id_spacecraft`) REFERENCES `Spacecrafts` (`id_spacecraft`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Spacecraft_has_Parts_Parts1` FOREIGN KEY (`id_part`) REFERENCES `Parts` (`id_part`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Spacecraft_has_Parts_Spacecraft1` FOREIGN KEY (`id_spacecraft`) REFERENCES `Spacecrafts` (`id_spacecraft`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
