@@ -45,16 +45,16 @@ def spacecraft_page():
     query3 = """
                 SELECT 
                   
-                Spacecrafts.id_spacecraft, 
-                Spacecrafts.name, 
-                Spacecrafts.in_orbit, 
-                Spacecrafts.launched, 
-                Spacecrafts.id_planetary_object, 
-                Spacecrafts.delta_v_remaining, 
-                Spacecrafts.mission_elapsed_time_days, 
-                Planetary_Objects.id_planetary_object, 
-                Planetary_Objects.name from Spacecrafts 
-                  
+                Spacecrafts.id_spacecraft as 'Spacecraft ID', 
+                Spacecrafts.name as 'Spacecraft Name', 
+                Spacecrafts.in_orbit as 'In Orbit?',  
+                Spacecrafts.launched as 'Launched?', 
+                Spacecrafts.delta_v_remaining as 'Delta V Remaining', 
+                Spacecrafts.mission_elapsed_time_days as 'Mission Elapsed Time (Days)', 
+                Planetary_Objects.name as 'Sphere of Influence' 
+
+                FROM Spacecrafts 
+
                 LEFT JOIN Planetary_Objects on Planetary_Objects.id_planetary_object = Spacecrafts.id_planetary_object;
             """
                 
@@ -71,6 +71,7 @@ def spacecraft_page():
         
     # return "<h1>MySQL Results" + str(results)
     # return "<h1>MySQL Results" + str(results[0])
+    # return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data)
     return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data)
 
     # OLD VERSION WHERE PYTHON FUNCTION WAS PASSED TO FILTER PLANETARY DATA BY ID - NOW USING SQL LEFT JOIN INSTEAD

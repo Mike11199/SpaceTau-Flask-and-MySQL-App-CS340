@@ -74,23 +74,29 @@
                 <label> Name </label> <input type="text" name="name">
                 <label> In Orbit? </label> 
                     <select name="in_orbit">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Yes</option>
-                        <option value="2">No</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>                        
                     </select>
                 <label> Launched? </label> 
-                    <select name="in_orbit">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Yes</option>
-                        <option value="2">No</option>
+                    <select name="launched">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>          
                     </select>
-                <label> Sphere of Influcence </label> 
+                {# <label> Sphere of Influcence </label> 
                     <select name="sphere_of_influence">
                         <option value="0">&nbsp;</option>
                         <option value="1">Mercury</option>
                         <option value="2">Venus</option>
                         <option value="3">Earth</option>
-                    </select>
+                    </select> #}
+                <label> Sphere of Influence </label> 
+                <select name="sphere_of_influence">                       
+                    {% if planetary_data %}
+                        {% for planet in planetary_data %}
+                            <option value="{{ planet.id_planetary_object }}">{{ planet.name }}</option>
+                        {% endfor %}
+                    {% endif %} 
+                </select>    
                     
                 <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining">
         </fieldset>
@@ -128,7 +134,7 @@
                         <option value="2">Venus</option>
                         <option value="3" selected>Earth</option>
                     </select>
-                    
+
                 <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining" value="500.00">
                 <label> Mission Elapsed Time - Days (MET) </label> <input type="number" name="delta_v_remaining" value="43">
         </fieldset>
@@ -158,7 +164,7 @@
 
 
     {# TABLE FOR SELECT STATEMENT #}
-    <div id="browse" style="display: block">
+    {# <div id="browse" style="display: block">
     <table>
         <thead>
         <tr>
@@ -189,7 +195,7 @@
     </table>
     </div>
 
-    <p>test dynamic data here</p>
+    <p>test dynamic data here</p> #}
 
     {% if spacecraft_data %}
         <div id="browse" style="display: block">
@@ -234,45 +240,9 @@
         </div>     
     {% endif %} 
 
-
-    {% if planetary_data %}
-        <div id="browse" style="display: block">
-            <table>
-			    <thead>
-				    <tr>
-					    <!-- Iterate through each key in the first entry to get the column name -->
-                        {% for key in planetary_data[0].keys() %}                            
-                            <!-- Create a <th> tag with the key inside of it, this will be our header row -->
-                            <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>					
-                        <!-- End of this for loop -->
-                        {% endfor %} 
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
-
-                    </tr>
-                </thead>
-
-				<tbody>
-					<!-- Now, iterate through every item in data -->
-                    {% for item in planetary_data %}
-					    <tr>
-						    <!-- Then iterate through every key in the current item dictionary -->
-                            {% for key in item.keys() %}
-						         <!-- Create a <td> element with the value of that key in it -->
-                                <td> {{item[key]}} </td> 
-                            {% endfor %}
-
-                            <!-- Create our edit/delete buttons -->
-						    {# <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td>
-						    <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
-                            <td><a href="#" onClick="updateSpacecraft('this.SpacecraftID')">Edit</a></td>
-                            <td><a href="#" onclick="deleteSpacecraft('this.SpacecraftID')">Delete</a></td>
-					    </tr> 
-                    {% endfor %} 
-
-            </table>
-        </div>     
-    {% endif %}     
+    <p></p>
+    <p>Planetary Data Output:</p>
+    {{ planetary_data }}
     
 </body>
 </html>
