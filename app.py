@@ -23,25 +23,25 @@ mysql = MySQL(app)
 # Routes
 @app.route('/')
 def root():
-    # query = "SELECT * FROM planets;"
-    # # query1 = 'DROP TABLE IF EXISTS diagnostic;'
-    # # query2 = 'CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);'
-    # # query3 = 'INSERT INTO diagnostic (text) VALUES ("testing for final project!!")'
-    # # query4 = 'SELECT * FROM diagnostic;'
-    # cur = mysql.connection.cursor()
-    # cur.execute(query)
-    # # cur.execute(query2)
-    # # cur.execute(query3)
-    # # cur.execute(query4)
-    # results = cur.fetchall()
-
-    # return "<h1>MySQL Results" + str(results[0])
-    # return "<h1>MySQL Results" 
     return render_template("main.jinja")
 
 
 @app.route('/spacecraft')
 def spacecraft_page():
+    query = "SELECT * FROM Spacecrafts;"
+    # # query1 = 'DROP TABLE IF EXISTS diagnostic;'
+    # # query2 = 'CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);'
+    # # query3 = 'INSERT INTO diagnostic (text) VALUES ("testing for final project!!")'
+    # # query4 = 'SELECT * FROM diagnostic;'
+    cur = mysql.connection.cursor()
+    cur.execute(query)
+    # # cur.execute(query2)
+    # # cur.execute(query3)
+    # # cur.execute(query4)
+    results = cur.fetchall()
+
+    # return "<h1>MySQL Results" + str(results[0])
+    # return "<h1>MySQL Results" 
     return render_template("spacecraft.jinja")
 
 @app.route('/missions')
