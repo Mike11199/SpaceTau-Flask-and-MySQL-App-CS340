@@ -29,53 +29,78 @@ def root():
 
 
 
-@app.route('/spacecraft')
+@app.route('/spacecraft', methods=["POST", "GET"])
 def spacecraft_page():
     
-    cur = mysql.connection.cursor()
     
-    query1 = "SELECT * FROM Spacecrafts;"    
-    cur.execute(query1)
-    spacecraft_data = cur.fetchall()
-    
-    query2 = "SELECT id_planetary_object, name FROM Planetary_Objects;"
-    cur.execute(query2)
-    planetary_data = cur.fetchall()
-            
-    query3 = """
-                SELECT 
-                  
-                Spacecrafts.id_spacecraft as 'Spacecraft ID', 
-                Spacecrafts.name as 'Spacecraft Name', 
-                Spacecrafts.in_orbit as 'In Orbit?',  
-                Spacecrafts.launched as 'Launched?', 
-                Spacecrafts.delta_v_remaining as 'Delta V Remaining', 
-                Spacecrafts.mission_elapsed_time_days as 'Mission Elapsed Time (Days)', 
-                Planetary_Objects.name as 'Sphere of Influence' 
-
-                FROM Spacecrafts 
-
-                LEFT JOIN Planetary_Objects on Planetary_Objects.id_planetary_object = Spacecrafts.id_planetary_object;
-            """
-                
-    cur.execute(query3)
-    spacecraft_data2 = cur.fetchall()
-    
-    # DON'T USE - PRIOR VERSION WHERE SPACECRAFT AND PLANETARY OBJECTS TABLE WERE PASSED INTO JINJA AND FUNCTION WAS USED TO LOOKUP PLANET BY PLANET ID.  
-    # NOW USING A SQL LEFT JOIN - KEEPING THIS AS AN EXAMPLE OF HOW TO PASS A PYTHON FUNCTION INTO
-    def get_planetary_object_by_id(planetary_objects, planet_id):
-        for planet in planetary_objects:
-            if planet['id_planetary_object'] == planet_id:
-                return planet
-        return None    
+    if request.method == "GET":
+        cur = mysql.connection.cursor()
         
-    # return "<h1>MySQL Results" + str(results)
-    # return "<h1>MySQL Results" + str(results[0])
-    # return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data)
-    return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data)
+        query1 = "SELECT * FROM Spacecrafts;"    
+        cur.execute(query1)
+        spacecraft_data = cur.fetchall()
+        
+        query2 = "SELECT id_planetary_object, name FROM Planetary_Objects;"
+        cur.execute(query2)
+        planetary_data = cur.fetchall()
+        
+        planetary_dict = {planet['id_planetary_object']: planet['name'] for planet in planetary_data}
+                
+        query3 = """
+                    SELECT 
+                    
+                    Spacecrafts.id_spacecraft as 'Spacecraft ID', 
+                    Spacecrafts.name as 'Spacecraft Name', 
+                    Spacecrafts.in_orbit as 'In Orbit?',  
+                    Spacecrafts.launched as 'Launched?', 
+                    Spacecrafts.delta_v_remaining as 'Delta V Remaining', 
+                    Spacecrafts.mission_elapsed_time_days as 'Mission Elapsed Time (Days)', 
+                    Planetary_Objects.name as 'Sphere of Influence' 
 
-    # OLD VERSION WHERE PYTHON FUNCTION WAS PASSED TO FILTER PLANETARY DATA BY ID - NOW USING SQL LEFT JOIN INSTEAD
-    # return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data, get_planetary_object_by_id=get_planetary_object_by_id)
+                    FROM Spacecrafts 
+
+                    LEFT JOIN Planetary_Objects on Planetary_Objects.id_planetary_object = Spacecrafts.id_planetary_object;
+                """
+                    
+        cur.execute(query3)
+        spacecraft_data2 = cur.fetchall()
+        
+        # DON'T USE - PRIOR VERSION WHERE SPACECRAFT AND PLANETARY OBJECTS TABLE WERE PASSED INTO JINJA AND FUNCTION WAS USED TO LOOKUP PLANET BY PLANET ID.  
+        # NOW USING A SQL LEFT JOIN - KEEPING THIS AS AN EXAMPLE OF HOW TO PASS A PYTHON FUNCTION INTO
+        def get_planetary_object_by_id(planetary_objects, planet_id):
+            for planet in planetary_objects:
+                if planet['id_planetary_object'] == planet_id:
+                    return planet
+            return None    
+        
+        
+            
+        # return "<h1>MySQL Results" + str(results)
+        # return "<h1>MySQL Results" + str(results[0])
+        # return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data)
+        return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_dict)
+
+        # OLD VERSION WHERE PYTHON FUNCTION WAS PASSED TO FILTER PLANETARY DATA BY ID - NOW USING SQL LEFT JOIN INSTEAD
+        # return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data, get_planetary_object_by_id=get_planetary_object_by_id)
+
+    if request.method == "POST":
+        
+         if request.form.get('add_spacecraft'):
+             
+            name = request.form["name"]
+            in_orbit = request.form["in_orbit"]
+            launched = request.form["launched"]
+            sphere_of_influence = request.form["sphere_of_influence"]
+            delta_v_remaining = request.form["delta_v_remaining"]      
+            MET_days  = request.form["MET_days"]      
+                      
+            query5 = "INSERT INTO Spacecrafts (name, in_orbit, launched, id_planetary_object, delta_v_remaining, mission_elapsed_time_days) VALUES (%s,%s,%s,%s,%s,%s)"
+            cur = mysql.connection.cursor()
+            cur.execute(query5, (name, in_orbit, launched, sphere_of_influence, delta_v_remaining, MET_days))
+            mysql.connection.commit()
+        
+         return redirect("/spacecraft")
+        
 
 @app.route('/missions')
 def missions_page():
