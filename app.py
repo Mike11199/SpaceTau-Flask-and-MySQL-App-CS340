@@ -1,11 +1,14 @@
 from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request
+
 import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 
 USER_NAME = os.getenv("USER_NAME")
-PASSWORD_LAST_4_DIGITS_STUDENT_ID = os.getenv("ONID_LAST_4")
+PASSWORD_LAST_4_DIGITS_STUDENT_ID = os.getenv("PASSWORD_LAST_4_DIGITS_STUDENT_ID")
 
 
 app = Flask(__name__)
@@ -16,7 +19,6 @@ app.config['MYSQL_PASSWORD'] = PASSWORD_LAST_4_DIGITS_STUDENT_ID #last 4 of onid
 app.config['MYSQL_DB'] = USER_NAME
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
-
 mysql = MySQL(app)
 
 
@@ -26,23 +28,16 @@ def root():
     return render_template("main.jinja")
 
 
+
 @app.route('/spacecraft')
 def spacecraft_page():
     query = "SELECT * FROM Spacecrafts;"
-    # # query1 = 'DROP TABLE IF EXISTS diagnostic;'
-    # # query2 = 'CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);'
-    # # query3 = 'INSERT INTO diagnostic (text) VALUES ("testing for final project!!")'
-    # # query4 = 'SELECT * FROM diagnostic;'
     cur = mysql.connection.cursor()
     cur.execute(query)
-    # # cur.execute(query2)
-    # # cur.execute(query3)
-    # # cur.execute(query4)
     results = cur.fetchall()
-
+    return "<h1>MySQL Results" + str(results)
     # return "<h1>MySQL Results" + str(results[0])
-    # return "<h1>MySQL Results" 
-    return render_template("spacecraft.jinja")
+    return render_template("spacecraft.jinja", results=results)
 
 @app.route('/missions')
 def missions_page():
