@@ -60,9 +60,7 @@
         
         console.log(id)
         console.log('what')
-
         url = '/get_spacecraft/' + id
-
         console.log(url)
 
         fetch(url).then(function(response) {
@@ -92,50 +90,51 @@
         }).catch(function(err) {
             console.log('Fetch Error :-S', err);
             browseSpacecraft()
-        });
-        
+        });        
 
         }
     
 
 
     function updateSpacecraft_Handler(id) {    
-    let toUpdate = document.getElementById('spacecraft_id_update').value;
-    let name = document.getElementById('spacecraft_name_update').value;
-    let in_orbit = document.getElementById('orbit_select_option').value;
-    let launched = document.getElementById('launched_select_option').value;
-    let sphere_of_influence = document.getElementById('soi_select_option').value;
-    let delta_v_remaining = document.getElementById('spacecraft_delta_v_update').value;
-    let MET_days = document.getElementById('spacecraft_met_update').value;
+        
+        
+        let toUpdate = document.getElementById('spacecraft_id_update').value;
+        let name = document.getElementById('spacecraft_name_update').value;
+        let in_orbit = document.getElementById('orbit_select_option').value;
+        let launched = document.getElementById('launched_select_option').value;
+        let sphere_of_influence = document.getElementById('soi_select_option').value;
+        let delta_v_remaining = document.getElementById('spacecraft_delta_v_update').value;
+        let MET_days = document.getElementById('spacecraft_met_update').value;
 
-    const url = '/update_spacecraft/' + toUpdate;
-    const url2 = '/spacecraft'; 
+        const url = '/update_spacecraft/' + toUpdate;
+        const url2 = '/spacecraft'; 
 
-    const data = {
-        spacecraft_name_update: name,
-        orbit_select_option: in_orbit,
-        launched_select_option: launched,
-        soi_select_option: sphere_of_influence,
-        spacecraft_delta_v_update: delta_v_remaining,
-        spacecraft_met_update: MET_days
-    };
+        const data = {
+            spacecraft_name_update: name,
+            orbit_select_option: in_orbit,
+            launched_select_option: launched,
+            soi_select_option: sphere_of_influence,
+            spacecraft_delta_v_update: delta_v_remaining,
+            spacecraft_met_update: MET_days
+        };
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        browseSpacecraft();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        browseSpacecraft();
-    });
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            browseSpacecraft();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            browseSpacecraft();
+        });
 }
 
 
