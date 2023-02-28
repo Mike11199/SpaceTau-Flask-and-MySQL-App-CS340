@@ -186,12 +186,13 @@ def missions_page():
 
 @app.route('/parts')
 def parts_page():
-    # query = "SELECT * FROM parts;"
-    # cur = mysql.connection.cursor()
-    # cur.execute(query)
-    # results = cur.fetchall()    
-    # print(results)   
-    return render_template("parts.jinja")
+    
+    query = "SELECT * FROM Parts;"
+    cur = mysql.connection.cursor()
+    cur.execute(query)
+    parts_data = cur.fetchall()    
+
+    return render_template("parts.jinja", parts_data=parts_data)
 
 @app.route('/astronauts')
 def astronauts_page():
@@ -207,7 +208,35 @@ def planetary_objects_page():
 
 @app.route('/parts-and-spacecraft')
 def parts_and_spacecraft_page():
-    return render_template("parts_and_spacecraft.jinja")
+    
+    query3 = """
+            SELECT 
+            
+            Spacecraft_has_Parts.id_spacecraft as 'Spacecraft ID', 
+            Spacecrafts.name as 'Spacecraft Name',
+            Spacecraft_has_Parts.id_part as 'Part ID',            
+            Parts.name as 'Parts Name'            
+            
+            FROM Spacecraft_has_Parts 
+
+            LEFT JOIN Spacecrafts on Spacecrafts.id_spacecraft = Spacecraft_has_Parts.id_spacecraft
+            LEFT JOIN Parts on Parts.id_part = Spacecraft_has_Parts.id_part;
+        """
+    
+    query = "SELECT * FROM Spacecraft_has_Parts;"
+    
+    cur = mysql.connection.cursor()
+    cur.execute(query3)
+    spacecraft_parts_data = cur.fetchall()    
+    
+    query2 = "SELECT id_spacecraft, name FROM Spacecrafts;"
+    
+    cur.execute(query2)
+    spacecraft_for_dropdown_filter_data = cur.fetchall()
+    
+
+    
+    return render_template("parts_and_spacecraft.jinja", spacecraft_parts_data=spacecraft_parts_data, spacecraft_for_dropdown_filter_data=spacecraft_for_dropdown_filter_data)
 
 
 # Listener

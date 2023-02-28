@@ -19,18 +19,21 @@
             document.getElementById('insert').style.display = 'block';
             document.getElementById('update').style.display = 'none';
             document.getElementById('delete').style.display = 'none';
+            document.getElementById('filter').style.display = 'none';
         }
         else if (dowhat == 'update'){
             document.getElementById('browse').style.display = 'block';
             document.getElementById('insert').style.display = 'none';
             document.getElementById('update').style.display = 'block';
             document.getElementById('delete').style.display = 'none';
+            document.getElementById('filter').style.display = 'none';
         }
         else if (dowhat == 'delete'){
             document.getElementById('browse').style.display = 'block';
             document.getElementById('insert').style.display = 'none';
             document.getElementById('update').style.display = 'none';
             document.getElementById('delete').style.display = 'block';
+            document.getElementById('filter').style.display = 'none';
         }
     else if (dowhat == 'all'){
             document.getElementById('browse').style.display = 'block';
@@ -43,12 +46,15 @@
             document.getElementById('insert').style.display = 'none';
             document.getElementById('update').style.display = 'none';
             document.getElementById('delete').style.display = 'none';
+            document.getElementById('filter').style.display = 'block';
         }
     }
     function newPart() { showform('insert'); }
     function updatePart(pid) { showform('update'); }
     function deletePart(pid) { showform ('delete'); }
-    function browsePart() { showform ('browse'); }
+    function browsePart() { showform ('browse');
+    
+     }
     function showAll() { showform ('all'); }
 
 </script>
@@ -73,7 +79,33 @@
     <p>Click the 'add' button to below to insert a new part/spacecraft association into the database.</p>
 
 
-    <button onclick="newPart() " class="add_button">Add a SpaceCraft/Part Relationship</button>
+    <button onclick="newPart() " class="filter_button">Add a M:N SpaceCraft/Part Relationship</button>
+
+    <p></p>
+    <p></p>
+    
+
+
+    <div id="filter" class="filterForm">
+        <form method="POST" id="addPart">
+        <legend><strong>Filter on Spacecaft</strong></legend>   
+        
+            <label> Spacecraft </label> 
+            <select name="spacecraft_select_option" id="spacecraft_select_option">                       
+            {% if spacecraft_for_dropdown_filter_data %}
+                {% for spacecraft_item in spacecraft_for_dropdown_filter_data %}
+                    <option value="{{ spacecraft_item['id_spacecraft'] }}">{{spacecraft_item['name']}}</option>
+                {% endfor %}
+            {% endif %} 
+            </select>   
+            
+        </fieldset>
+            <input class="submit_button" type="submit" id="addSpacecraft-Part-Relationship" value="Filter on Spacecraft">     
+            <input class="add_button" type="button" id="addSpacecraft-Part-Relationship" value="Remove Filters">      
+        </form> 
+    </div>
+    
+
 
     {# FORM FOR ADDING A PART - Always Visible or Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
@@ -144,8 +176,8 @@
     </div>
 
 
-    {# TABLE FOR SELECT STATEMENT #}
-    <div id="browse" style="display: block">
+    {# TABLE FOR SELECT STATEMENT - HARDCODED#}
+    {# <div id="browse" style="display: block">
         <table>
             <thead>
             <tr>
@@ -176,7 +208,56 @@
             <tbody>            
             </tbody>
         </table>
-    </div>
+    </div> #}
+
+    {% if spacecraft_parts_data %}
+        <div id="browse" style="display: block">
+            <table>
+			    <thead>
+				    <tr>
+					    <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in spacecraft_parts_data[0].keys() %}                            
+                            <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                            <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>					
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+
+                    </tr>
+                </thead>
+
+				<tbody>
+					<!-- Now, iterate through every item in data -->
+                    {% for item in spacecraft_parts_data %}
+					    <tr>
+						    <!-- Then iterate through every key in the current item dictionary -->
+                            {% for key in item.keys() %}
+						         <!-- Create a <td> element with the value of that key in it -->
+                                {% if key == "id_planetary_object" %}     
+                                    <td> {{item[key]}} </td> 
+                                {% else %}     
+                                    <td> {{item[key]}} </td> 
+                                {% endif %} 
+                            {% endfor %}
+
+                            <!-- Create our edit/delete buttons --> 
+                                                         
+                            {# <td><a href="/delete_spacecraft/{{item['Spacecraft ID']}}" class="btn btn-default">Edit</a></td>
+						    <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td> #}
+
+						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
+                            <td><a href="#" onClick="updateSpacecraft('{{item['Spacecraft ID']}}')">Edit</a></td>
+                            <td><a href="#" onclick="deleteSpacecraft('{{item['Spacecraft ID']}}')">Delete</a></td>      
+                            
+                                            
+
+					    </tr> 
+                    {% endfor %} 
+
+            </table>
+        </div>     
+    {% endif %} 
 
 
     
