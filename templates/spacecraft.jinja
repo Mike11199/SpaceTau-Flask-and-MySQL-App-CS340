@@ -8,6 +8,14 @@
 {# https://jinja.palletsprojects.com/en/3.0.x/templates/#list-of-control-structures #}
 {% block javascript %}
 <script language="JavaScript">
+
+
+    document.addEventListener("DOMContentLoaded", function(event){
+        document.getElementById('deleteSpacecraft').addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+    });
+
     
     function showform(dowhat) {
         /*
@@ -47,7 +55,91 @@
     }
     function newSpacecraft() { showform('insert'); }
     function updateSpacecraft(id) { showform('update'); }
-    function deleteSpacecraft(id) { showform ('delete'); }
+    
+    
+    function deleteSpacecraft(id) {    
+        
+        console.log(id)
+        console.log('what')
+
+        url = '/get_spacecraft/' + id
+
+        console.log(url)
+
+        fetch(url).then(function(response) {
+        
+        return response.json();
+        }).then(function(data) {
+            
+            console.log(data)
+            document.getElementById('spacecraft_id_delete').innerHTML = data[0].id_spacecraft;
+            document.getElementById('spacecraft_name_delete').innerHTML = data[0].name;
+            document.getElementById('spacecraft_in_orbit_delete').innerHTML = data[0].in_orbit;
+            document.getElementById('spacecraft_launched_delete').innerHTML = data[0].launched;
+            document.getElementById('spacecraft_delta_v_delete').innerHTML = data[0].delta_v_remaining;
+            document.getElementById('spacecraft_met_delete').innerHTML = data[0].mission_elapsed_time_days;
+            document.getElementById('spacecraft_sphere_of_influence_delete').innerHTML = data[0].id_planetary_object;     
+            showform ('delete'); 
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseSpacecraft()
+        });
+
+
+        
+
+                                    }
+
+    function deleteSpaceCraftHandler() { 
+
+
+        
+        let toDelete = document.getElementById('spacecraft_id_delete').innerHTML
+        console.log(toDelete)       
+        url = '/delete_spacecraft/' + toDelete
+        url2 = '/spacecraft' 
+
+        console.log(url)
+
+        fetch(url).then(function(response) {
+               
+        return response
+        }).then(function(data) {
+            
+            console.log(data)
+            browseSpacecraft()
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseSpacecraft()
+        });
+
+
+        //attempt to refresh table
+        fetch(url2).then(function(response) {
+               
+        return response
+        }).then(function(data) {
+            
+            console.log(data)
+            browseSpacecraft()
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseSpacecraft()
+        });
+
+
+
+
+
+    }  
+    
+    
     function browseSpacecraft() { showform ('browse'); }
     function showAll() { showform ('all'); }
 
@@ -63,10 +155,16 @@
     <h1>SpaceTau Database System - Spacecraft Page</h1>
     
     <p>Spacecraft page.</p>
+    
 
     <img src="https://cdn.arstechnica.net/wp-content/uploads/2018/08/gatemain.jpg" width="500px">
     <p></p>
     <p></p>
+
+    {# {{spacecraft_data}} #}
+    <p></p>
+    <p></p>
+    {# {{spacecraft_data_dictionary}} #}
 
     <button onclick="newSpacecraft() " class="add_button">Add a Spacecraft</button>
 
@@ -75,7 +173,7 @@
         <form method="POST" id="add_spacecraft" action="/spacecraft" method="post">
             <legend><strong>Add Spacecraft</strong></legend>
             <fieldset class="fields">
-                <label> Name </label> <input type="text" name="name">
+                <label> Name </label> <input type="text" name="name" required>
                 <label> In Orbit? </label> 
                     <select name="in_orbit">
                         <option value="0">No</option>
@@ -97,8 +195,8 @@
                 <p></p>
                 <p></p>
                 <p></p>
-                <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining">
-                <label> Mission Elapsed Time (days) </label> <input type="number" name="MET_days">
+                <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining" required>
+                <label> Mission Elapsed Time (days) </label> <input type="number" name="MET_days" required>
 
         </fieldset>
             <input class="submit_button" type="submit" id="addSpacecraft" value="Add Spacecraft" name = "add_spacecraft">
@@ -151,20 +249,28 @@
                 <fieldset class="fields">
                 <p>Are you sure you wish to delete the following?</p>
                 <input type="hidden" name="spacecraftID" id="deletespacecraftID" value="1">
-                <label><strong>ID:</strong></label> 1
-                <label> <strong>Name:</strong> </label> Garmin GPS Satellite 34
-                <label> <strong>In Orbit?:</strong> </label> Yes
-                <label> <strong>Launched?:</strong> </label> Yes
-                <label> <strong>Delta V Remaining:</strong> </label> 500.00
-                <label> <strong>Mission Elapsed Time Days</strong> </label> 43
+                <label><strong>Spacecraft ID:</strong></label> 
+                <div id="spacecraft_id_delete"></div>
+                <label> <strong>Spacecraft Name:</strong> </label> 
+                <div id="spacecraft_name_delete"></div>
+                <label> <strong>In Orbit?:</strong> </label>
+                <div id="spacecraft_in_orbit_delete"></div>
+                <label> <strong>Launched?:</strong> </label>
+                <div id="spacecraft_launched_delete"></div>
+                <label> <strong>Delta V Remaining:</strong> </label>
+                <div id="spacecraft_delta_v_delete"></div>
+                <label> <strong>Mission Elapsed Time (Days):</strong> </label> 
+                <div id="spacecraft_met_delete"></div>
+                <label> <strong>Sphere of Influence:</strong> </label> 
+                <div id="spacecraft_sphere_of_influence_delete"></div>
             </fieldset>
-            <input class="submit_button" type="submit" id="DeletePerson" value="Delete Spacecraft">
+            <input class="submit_button" type="submit" id="DeletePerson" value="Delete Spacecraft" onClick="deleteSpaceCraftHandler()">
             <input class="cancel_button" type="button" value="cancel" onClick="browseSpacecraft()">
         </form> 
     </div>
 
 
-    {# TABLE FOR SELECT STATEMENT #}
+    {# TABLE FOR SELECT STATEMENT - HARDCODED #}
     {# <div id="browse" style="display: block">
     <table>
         <thead>
@@ -229,11 +335,17 @@
                                 {% endif %} 
                             {% endfor %}
 
-                            <!-- Create our edit/delete buttons -->
-						    {# <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td>
-						    <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
+                            <!-- Create our edit/delete buttons --> 
+                                                         
+                            {# <td><a href="/delete_spacecraft/{{item['Spacecraft ID']}}" class="btn btn-default">Edit</a></td>
+						    <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td> #}
+
+						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
                             <td><a href="#" onClick="updateSpacecraft('this.SpacecraftID')">Edit</a></td>
-                            <td><a href="#" onclick="deleteSpacecraft('this.SpacecraftID')">Delete</a></td>
+                            <td><a href="#" onclick="deleteSpacecraft('{{item['Spacecraft ID']}}')">Delete</a></td>      
+                            
+                                            
+
 					    </tr> 
                     {% endfor %} 
 

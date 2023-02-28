@@ -1,6 +1,6 @@
 from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
-from flask import request
+from flask import request, jsonify
 
 import os
 from dotenv import load_dotenv, find_dotenv
@@ -45,6 +45,8 @@ def spacecraft_page():
         planetary_data = cur.fetchall()
         
         planetary_dict = {planet['id_planetary_object']: planet['name'] for planet in planetary_data}
+        
+
                 
         query3 = """
                     SELECT 
@@ -64,6 +66,7 @@ def spacecraft_page():
                     
         cur.execute(query3)
         spacecraft_data2 = cur.fetchall()
+        spacecraft_data_dictionary =  {spacecraft['Spacecraft ID']: {'Spacecraft Name': spacecraft['Spacecraft Name'], 'In Orbit?': spacecraft['In Orbit?'],'Launched?': spacecraft['Launched?'],'Delta V Remaining': spacecraft['Delta V Remaining'],'Mission Elapsed Time (Days)': spacecraft['Mission Elapsed Time (Days)'],'Sphere of Influence': spacecraft['Sphere of Influence'], } for spacecraft in spacecraft_data2}
         
         # DON'T USE - PRIOR VERSION WHERE SPACECRAFT AND PLANETARY OBJECTS TABLE WERE PASSED INTO JINJA AND FUNCTION WAS USED TO LOOKUP PLANET BY PLANET ID.  
         # NOW USING A SQL LEFT JOIN - KEEPING THIS AS AN EXAMPLE OF HOW TO PASS A PYTHON FUNCTION INTO
@@ -78,7 +81,7 @@ def spacecraft_page():
         # return "<h1>MySQL Results" + str(results)
         # return "<h1>MySQL Results" + str(results[0])
         # return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data)
-        return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_dict)
+        return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_dict, spacecraft_data_dictionary=spacecraft_data_dictionary)
 
         # OLD VERSION WHERE PYTHON FUNCTION WAS PASSED TO FILTER PLANETARY DATA BY ID - NOW USING SQL LEFT JOIN INSTEAD
         # return render_template("spacecraft.jinja", spacecraft_data=spacecraft_data2, planetary_data=planetary_data, get_planetary_object_by_id=get_planetary_object_by_id)
@@ -100,6 +103,43 @@ def spacecraft_page():
             mysql.connection.commit()
         
          return redirect("/spacecraft")
+    
+       
+@app.route("/delete_spacecraft/<int:id>")
+def delete_spacecraft(id):
+
+
+    query = "DELETE FROM Spacecrafts WHERE id_spacecraft = '%s';"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (id,))
+    mysql.connection.commit()
+
+    # redirect back to people page
+    # message = jsonify({'Success': 'Spacecraft Deleted!'}) 
+    return redirect("/spacecraft")
+
+
+
+
+@app.route("/get_spacecraft/<int:id>")
+def retrieve_spacecraft(id):
+
+    query = "Select * FROM Spacecrafts WHERE id_spacecraft = '%s';"
+    # cur = mysql.connection.cursor()
+    # cur.execute(query, (id))
+    
+    # query = "Select * FROM Spacecrafts WHERE id_spacecraft = 1;"
+    cur = mysql.connection.cursor()
+    cur.execute(query,(id,))
+    # cur.execute(query)
+    
+    # mysql.connection.commit()
+    spacecraft_data2 = cur.fetchall()
+    # return "<h1>MySQL Results" + str(spacecraft_data2[0])
+    # # return <p>spacecraft_data2</p>
+    return jsonify(spacecraft_data2), 200
+     
+       
         
 
 @app.route('/missions')
