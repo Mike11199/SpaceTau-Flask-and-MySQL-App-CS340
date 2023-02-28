@@ -94,15 +94,52 @@
             browseSpacecraft()
         });
         
-        
-        
-        
-        
-        
-        
+
         }
     
-    
+
+
+    function updateSpacecraft_Handler(id) {    
+    let toUpdate = document.getElementById('spacecraft_id_update').value;
+    let name = document.getElementById('spacecraft_name_update').value;
+    let in_orbit = document.getElementById('orbit_select_option').value;
+    let launched = document.getElementById('launched_select_option').value;
+    let sphere_of_influence = document.getElementById('soi_select_option').value;
+    let delta_v_remaining = document.getElementById('spacecraft_delta_v_update').value;
+    let MET_days = document.getElementById('spacecraft_met_update').value;
+
+    const url = '/update_spacecraft/' + toUpdate;
+    const url2 = '/spacecraft'; 
+
+    const data = {
+        spacecraft_name_update: name,
+        orbit_select_option: in_orbit,
+        launched_select_option: launched,
+        soi_select_option: sphere_of_influence,
+        spacecraft_delta_v_update: delta_v_remaining,
+        spacecraft_met_update: MET_days
+    };
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        browseSpacecraft();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        browseSpacecraft();
+    });
+}
+
+
+
     function deleteSpacecraft(id) {    
         
         console.log(id)
@@ -232,32 +269,32 @@
         <form method="POST" id="updateSpacecraft">
             <legend><strong>Update Spacecaft</strong></legend>
             <fieldset class="fields">
-            <input type="hidden" name="spacecraftID" id="spacecraft_id_update" value="">
+            <input type="hidden" name="spacecraftID" id="spacecraft_id_update">
             <label> ID: </label> <div id="spacecraft_id_update_label"></div>
-            <label> Name </label> <input type="text" name="name" value="" id="spacecraft_name_update">
+            <label> Name </label> <input type="text" name="spacecraft_name_update" id="spacecraft_name_update">
                 <label> In Orbit? </label> 
-                    <select name="in_orbit"  id="orbit_select_option">
+                    <select name="orbit_select_option"  id="orbit_select_option">
                         <option value="0">No</option>
                         <option value="1">Yes</option>                        
                     </select>
                 <label> Launched? </label> 
-                    <select name="in_orbit"  id="launched_select_option">
+                    <select name="launched_select_option"  id="launched_select_option">
                         <option value="0">No</option>
                         <option value="1">Yes</option>     
                     </select>
                 <label> Sphere of Influence </label> 
-                <select name="sphere_of_influence" id="soi_select_option">                       
+                <select name="soi_select_option" id="soi_select_option">                       
                     {% if planetary_data %}
                         {% for planet in planetary_data %}
                             <option value="{{ planet }}">{{planetary_data[planet]}}</option>
                         {% endfor %}
                     {% endif %} 
                 </select>    
-                <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining" value="500.00" id="spacecraft_delta_v_update">
-                <label> Mission Elapsed Time - Days (MET) </label> <input type="number" name="delta_v_remaining" value="43" id="spacecraft_met_update">
+                <label> Delta V Remaining (m/s) </label> <input type="number" name="spacecraft_delta_v_update" value="500.00" id="spacecraft_delta_v_update">
+                <label> Mission Elapsed Time - Days (MET) </label> <input type="number" name="spacecraft_met_update" value="43" id="spacecraft_met_update">
         </fieldset>
-            <input class="submit_button" type="submit" id="UpdateSaveSpacecraft" value="Save Updated Spacecraft">
-            <input class="cancel_button" type="button" value="cancel" onClick="browseSpacecraft()">
+            <input class="submit_button" type="submit" id="UpdateSaveSpacecraft" value="Update Spacecraft" onClick="updateSpacecraft_Handler()">
+            <input class="cancel_button" type="button" value="Cancel" onClick="browseSpacecraft()">
         </form> 
     </div>
 

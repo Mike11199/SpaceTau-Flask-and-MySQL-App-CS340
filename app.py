@@ -131,6 +131,53 @@ def retrieve_spacecraft(id):
     return jsonify(spacecraft_data2), 200
      
        
+       
+@app.route("/update_spacecraft/<int:id>", methods=["POST", "GET"])
+def update_spacecraft(id):
+    
+    data = request.get_json()
+    name = data["spacecraft_name_update"]
+    in_orbit = data["orbit_select_option"]
+    launched = data["launched_select_option"]
+    sphere_of_influence = data["soi_select_option"]
+    delta_v_remaining = data["spacecraft_delta_v_update"]
+    MET_days = data["spacecraft_met_update"]
+
+    query = """
+            UPDATE Spacecrafts
+            SET name=%s, in_orbit=%s, launched=%s, id_planetary_object=%s, delta_v_remaining=%s, mission_elapsed_time_days=%s
+            WHERE id_spacecraft = %s;
+            """
+    cur = mysql.connection.cursor()
+    cur.execute(query, (name, in_orbit, launched, sphere_of_influence, delta_v_remaining, MET_days, id,))
+    mysql.connection.commit()
+
+    return jsonify(id)
+
+    # BELOW IS OLD WAY THAT DOESN'T WORK.  KEEP ON GETTING A KEY ERROR WHEN TRYING TO ACCESS THE FORM VALUES
+    # name = request.form["spacecraft_name_update"]
+    # # name = 'Lunar Gateway Station2'
+    # in_orbit = request.form["orbit_select_option"]
+    # launched = request.form["launched_select_option"]
+    # sphere_of_influence = request.form["soi_select_option"]
+    # delta_v_remaining = request.form["spacecraft_delta_v_update"]      
+    # MET_days  = request.form["spacecraft_met_update"]      
+
+    # query = """
+    #         UPDATE Spacecrafts
+    #         SET name=%s, in_orbit=%s, launched=%s, id_planetary_object=%s, delta_v_remaining=%s, mission_elapsed_time_days=%s
+    #         WHERE id_spacecraft = %s;
+    #         """
+    # cur = mysql.connection.cursor()
+    # cur.execute(query, (name, in_orbit, launched, sphere_of_influence, delta_v_remaining, MET_days, id,))
+    # mysql.connection.commit()
+
+    # return jsonify(id) 
+    # # redirect back to people page
+    # # message = jsonify({'Success': 'Spacecraft Deleted!'}) 
+    # # return jsonify({'Success': 'Spacecraft Updated!'}), 200
+    # return redirect("/spacecraft")
+       
         
 
 @app.route('/missions')
