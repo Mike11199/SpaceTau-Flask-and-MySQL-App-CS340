@@ -116,6 +116,7 @@ def delete_spacecraft(id):
 
     # redirect back to people page
     # message = jsonify({'Success': 'Spacecraft Deleted!'}) 
+    return jsonify({'Success': 'Spacecraft Deleted!'}), 200
     return redirect("/spacecraft")
 
 
@@ -123,20 +124,10 @@ def delete_spacecraft(id):
 
 @app.route("/get_spacecraft/<int:id>")
 def retrieve_spacecraft(id):
-
     query = "Select * FROM Spacecrafts WHERE id_spacecraft = '%s';"
-    # cur = mysql.connection.cursor()
-    # cur.execute(query, (id))
-    
-    # query = "Select * FROM Spacecrafts WHERE id_spacecraft = 1;"
     cur = mysql.connection.cursor()
     cur.execute(query,(id,))
-    # cur.execute(query)
-    
-    # mysql.connection.commit()
     spacecraft_data2 = cur.fetchall()
-    # return "<h1>MySQL Results" + str(spacecraft_data2[0])
-    # # return <p>spacecraft_data2</p>
     return jsonify(spacecraft_data2), 200
      
        

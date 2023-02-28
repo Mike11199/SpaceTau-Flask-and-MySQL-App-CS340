@@ -9,13 +9,13 @@
 {% block javascript %}
 <script language="JavaScript">
 
-
+   /*
     document.addEventListener("DOMContentLoaded", function(event){
         document.getElementById('deleteSpacecraft').addEventListener('submit', function(e) {
             e.preventDefault();
         });
     });
-
+    */
     
     function showform(dowhat) {
         /*
@@ -54,7 +54,53 @@
         }
     }
     function newSpacecraft() { showform('insert'); }
-    function updateSpacecraft(id) { showform('update'); }
+    
+
+    function updateSpacecraft(id) { 
+        
+        console.log(id)
+        console.log('what')
+
+        url = '/get_spacecraft/' + id
+
+        console.log(url)
+
+        fetch(url).then(function(response) {
+        
+        return response.json();
+        }).then(function(data) {
+            
+            console.log(data)
+            document.getElementById('spacecraft_id_update').value = data[0].id_spacecraft;
+            document.getElementById('spacecraft_id_update_label').innerHTML = data[0].id_spacecraft;
+            document.getElementById('spacecraft_name_update').value = data[0].name;
+
+            document.getElementById('orbit_select_option').selectedIndex = data[0].in_orbit;
+            document.getElementById('launched_select_option').selectedIndex = data[0].launched;
+
+            document.getElementById('spacecraft_delta_v_update').value = data[0].delta_v_remaining;
+            document.getElementById('spacecraft_met_update').value = data[0].mission_elapsed_time_days;
+ 
+            document.getElementById("soi_select_option").selectedIndex = data[0].id_planetary_object -1; 
+           
+            console.log('selecting planet with id')
+            console.log(data[0].id_planetary_object)
+
+            showform('update'); 
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseSpacecraft()
+        });
+        
+        
+        
+        
+        
+        
+        
+        }
     
     
     function deleteSpacecraft(id) {    
@@ -86,16 +132,11 @@
             console.log('Fetch Error :-S', err);
             browseSpacecraft()
         });
-
-
-        
-
                                     }
+
 
     function deleteSpaceCraftHandler() { 
 
-
-        
         let toDelete = document.getElementById('spacecraft_id_delete').innerHTML
         console.log(toDelete)       
         url = '/delete_spacecraft/' + toDelete
@@ -116,27 +157,6 @@
             console.log('Fetch Error :-S', err);
             browseSpacecraft()
         });
-
-
-        //attempt to refresh table
-        fetch(url2).then(function(response) {
-               
-        return response
-        }).then(function(data) {
-            
-            console.log(data)
-            browseSpacecraft()
-
-
-        }).catch(function(err) {
-            console.log('Fetch Error :-S', err);
-            browseSpacecraft()
-        });
-
-
-
-
-
     }  
     
     
@@ -167,6 +187,7 @@
     {# {{spacecraft_data_dictionary}} #}
 
     <button onclick="newSpacecraft() " class="add_button">Add a Spacecraft</button>
+
 
     {# FORM FOR ADDING A SPACECRAFT - Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
@@ -211,36 +232,36 @@
         <form method="POST" id="updateSpacecraft">
             <legend><strong>Update Spacecaft</strong></legend>
             <fieldset class="fields">
-            <input type="hidden" name="spacecraftID" id="updatespacecraftID" value="1">
-            <label> ID: </label> 1
-            <label> Name </label> <input type="text" name="name" value="Garmin GPS Satellite 34">
+            <input type="hidden" name="spacecraftID" id="spacecraft_id_update" value="">
+            <label> ID: </label> <div id="spacecraft_id_update_label"></div>
+            <label> Name </label> <input type="text" name="name" value="" id="spacecraft_name_update">
                 <label> In Orbit? </label> 
-                    <select name="in_orbit">
-                        <option value="0">&nbsp;</option>
-                        <option value="1" selected>Yes</option>
-                        <option value="2">No</option>
+                    <select name="in_orbit"  id="orbit_select_option">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>                        
                     </select>
                 <label> Launched? </label> 
-                    <select name="in_orbit">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Yes</option>
-                        <option value="2" selected>No</option>
+                    <select name="in_orbit"  id="launched_select_option">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>     
                     </select>
-                <label> Sphere of Influcence </label> 
-                    <select name="sphere_of_influence">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Mercury</option>
-                        <option value="2">Venus</option>
-                        <option value="3" selected>Earth</option>
-                    </select>
-
-                <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining" value="500.00">
-                <label> Mission Elapsed Time - Days (MET) </label> <input type="number" name="delta_v_remaining" value="43">
+                <label> Sphere of Influence </label> 
+                <select name="sphere_of_influence" id="soi_select_option">                       
+                    {% if planetary_data %}
+                        {% for planet in planetary_data %}
+                            <option value="{{ planet }}">{{planetary_data[planet]}}</option>
+                        {% endfor %}
+                    {% endif %} 
+                </select>    
+                <label> Delta V Remaining (m/s) </label> <input type="number" name="delta_v_remaining" value="500.00" id="spacecraft_delta_v_update">
+                <label> Mission Elapsed Time - Days (MET) </label> <input type="number" name="delta_v_remaining" value="43" id="spacecraft_met_update">
         </fieldset>
             <input class="submit_button" type="submit" id="UpdateSaveSpacecraft" value="Save Updated Spacecraft">
             <input class="cancel_button" type="button" value="cancel" onClick="browseSpacecraft()">
         </form> 
     </div>
+
+
 
     {# FORM FOR DELETING A PART - This becomes visible when the DELETE BUTTON on a record is clicked #}
     <div id="delete" style="display: block" class="deleteForm">
@@ -341,7 +362,7 @@
 						    <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td> #}
 
 						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
-                            <td><a href="#" onClick="updateSpacecraft('this.SpacecraftID')">Edit</a></td>
+                            <td><a href="#" onClick="updateSpacecraft('{{item['Spacecraft ID']}}')">Edit</a></td>
                             <td><a href="#" onclick="deleteSpacecraft('{{item['Spacecraft ID']}}')">Delete</a></td>      
                             
                                             
