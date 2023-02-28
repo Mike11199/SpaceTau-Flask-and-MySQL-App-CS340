@@ -1,4 +1,7 @@
- 
+html {
+  margin-left: 20px;
+}
+
  h1 {
     font-size: x-large;
     color: black;
@@ -41,6 +44,8 @@ table {
     padding: 0px;
     margin-bottom: 300px;
   }
+
+  
 
   tr:nth-child(even){
     background-color: rgb(196, 196, 199);
@@ -270,4 +275,10 @@ textarea {
   border-radius: 10px;
   width: 200px;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 1);
+}
+
+img {
+  box-shadow: -15px 15px 30px rgba(0, 0, 0, 1);
+  margin-bottom: 40px;
+  
 }
