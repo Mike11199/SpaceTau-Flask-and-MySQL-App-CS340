@@ -227,7 +227,7 @@ def missions_page():
         cur.execute(spacecraft_query_1)
         spacecraft_data = cur.fetchall()    
         spacecraft_dict = {spacecraft['id_spacecraft']: spacecraft['name'] for spacecraft in spacecraft_data}
-        spacecraft_data = client_dict
+        spacecraft_data = spacecraft_dict
         
         return render_template("missions.jinja", mission_data=mission_data, client_data=client_data, spacecraft_data=spacecraft_data)
 
@@ -242,8 +242,11 @@ def missions_page():
             is_external = request.form["external_contract"]
             mission_description = request.form["mission_description"]
                         
-            spacecraft_id = request.form.get(["spacecraft_id"],'noneSelected')   # OPTIONAL
-            client_id =request.form.get(["client_id"],'noneSelected')            # OPTIONAL
+            spacecraft_id = request.form["spacecraft_id"]   # OPTIONAL
+            client_id =request.form["client_id"]            # OPTIONAL
+            
+            # spacecraft_id = 'noneSelected'
+            # client_id = 'noneSelected'
            
             cur = mysql.connection.cursor()
            
