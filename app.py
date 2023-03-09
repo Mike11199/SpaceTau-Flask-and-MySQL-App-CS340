@@ -288,15 +288,36 @@ def missions_page():
 
 
 
-@app.route('/parts')
+@app.route('/parts', methods=["POST", "GET"])
 def parts_page():
+ 
     
-    query = "SELECT * FROM Parts;"
-    cur = mysql.connection.cursor()
-    cur.execute(query)
-    parts_data = cur.fetchall()    
+    if request.method == "GET":
+        query = "SELECT * FROM Parts;"
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        parts_data = cur.fetchall()    
 
-    return render_template("parts.jinja", parts_data=parts_data)
+        return render_template("parts.jinja", parts_data=parts_data)
+
+    
+    if request.method == "POST":
+        part_name = request.form["name"]
+        part_manufacturer = request.form["manufacturer"]
+        part_mass = request.form["mass"]
+        part_cost = request.form["cost"]
+        part_description = request.form["description"]
+                    
+        add_parts_query = """
+        INSERT INTO Parts (name, manufacturer, mass_kg, cost, part_description) 
+        VALUES (%s,%s,%s,%s,%s);
+        """
+        
+        cur = mysql.connection.cursor()
+        cur.execute(add_parts_query, (part_name, part_manufacturer, part_mass, part_cost, part_description))
+        mysql.connection.commit()
+        return redirect("/parts")
+
 
 @app.route('/astronauts')
 def astronauts_page():
@@ -393,7 +414,7 @@ def parts_and_spacecraft_page():
         # return render_template("parts_and_spacecraft.jinja", spacecraft_parts_data=spacecraft_parts_data, spacecraft_for_dropdown_filter_data=spacecraft_for_dropdown_filter_data)
 
     if request.method == "POST":
-        if request.form.get('addRelationship'):
+        # if request.form.get('addRelationship'):  # this line likely causing bug
             part_name = request.form["part_name"]
             spacecraft_name = request.form["spacecraft_name"]
             add_relationship_query = "INSERT INTO Spacecraft_has_Parts (id_spacecraft, id_part) VALUES (%s, %s)"
@@ -401,6 +422,7 @@ def parts_and_spacecraft_page():
             cur.execute(add_relationship_query, (spacecraft_name, part_name))
             mysql.connection.commit()
             # return render_template("parts_and_spacecraft.jinja")
+            return redirect("/planetary-objects")
             
 
 @app.route("/update_parts_and_spacecraft/<int:id>", methods=["POST", "GET"])
