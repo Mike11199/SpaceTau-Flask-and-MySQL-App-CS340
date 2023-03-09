@@ -81,28 +81,44 @@
                 <label> Contract Revenues </label> <input type="number" name="contract_revenues">
                 <label> Contract Costs </label> <input type="number" name="contract_costs">                
                 <label> External Contract? </label> 
-                    <select name="external_contract">
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                    </select>
-                    <label> Spacecraft Name (optional) </label>      
-                    <select name="spacecraft_id">   
-                    <option value="">&nbsp;</option>      
-                    {% if spacecraft_data %}
-                        {% for spacecraft in spacecraft_data %}
-                            <option value="{{ spacecraft }}">{{spacecraft_data[spacecraft]}}</option>
-                        {% endfor %}
-                    {% endif %} 
-                    </select>  
-                    <label> Client Name (optional) </label> 
-                    <select name="client_id">     
-                    <option value="">&nbsp;</option>                        
-                    {% if client_data %}
-                        {% for client in client_data %}
-                            <option value="{{ client }}">{{client_data[client]}}</option>
-                        {% endfor %}
-                    {% endif %} 
-                    </select>         
+                <select name="external_contract">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <p></p>
+                
+                {# <label> Part Description </label> <input type="textarea" name="description" class="largeTextBox"> #}
+                <div class="largeTextBox">
+                    <label> Mission Description  </label> 
+                    <p></p>
+                    <textarea name = "mission_description" >
+                    Enter details here...
+                    </textarea>
+                </div>
+
+                <p></p>
+
+
+                
+                <label> Spacecraft Name (optional) </label>      
+                <select name="spacecraft_id">   
+                <option value="">&nbsp;</option>      
+                {% if spacecraft_data %}
+                    {% for spacecraft in spacecraft_data %}
+                        <option value="{{ spacecraft }}">{{spacecraft_data[spacecraft]}}</option>
+                    {% endfor %}
+                {% endif %} 
+                </select>  
+                <label> Client Name (optional) </label> 
+                <select name="client_id">     
+                <option value="">&nbsp;</option>                        
+                {% if client_data %}
+                    {% for client in client_data %}
+                        <option value="{{ client }}">{{client_data[client]}}</option>
+                    {% endfor %}
+                {% endif %} 
+                </select>         
         </fieldset>
             <input class="submit_button" type="submit" id="addMission" value="Add Mission">
             <input class="cancel_button" type="button" value="Cancel" onClick="browseMission()">

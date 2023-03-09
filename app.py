@@ -239,17 +239,19 @@ def missions_page():
             mission_name = request.form["name"]
             contract_revenues = request.form["contract_revenues"]
             contract_costs = request.form["contract_costs"]
-            external_contract = request.form["external_contract"]
-            spacecraft_id = request.form["external_contract"]       # OPTIONAL
-            client_id =request.form["external_contract"]            # OPTIONAL
+            is_external = request.form["external_contract"]
+            mission_description = request.form["mission_description"]
                         
-            add_planetary_obj_query = """
-            INSERT INTO Planetary_Objects (name, surface_gravity_g, avg_distance_from_sun_au, is_planet, is_moon) 
+            spacecraft_id = request.form["spacecraft_id"]   # OPTIONAL
+            client_id =request.form["client_id"]            # OPTIONAL
+                        
+            add_mission_query = """
+            INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description, id_spacecraft, id_client) 
             VALUES (%s,%s,%s,%s,%s);
             """
             
             cur = mysql.connection.cursor()
-            cur.execute(add_planetary_obj_query, (planetary_obj_name, planetary_obj_gravity, planetary_obj_distance, planetary_obj_is_planet, planetary_obj_is_moon))
+            cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description, spacecraft_id, client_id))
             mysql.connection.commit()
             return redirect("/missions")
     
