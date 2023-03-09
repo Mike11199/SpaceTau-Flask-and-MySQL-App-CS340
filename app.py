@@ -188,6 +188,8 @@ def missions_page():
     # DEFAULT ROUTE - Viewing the page executes SELECT statement or READ functionality
     if request.method == "GET":
         
+        missions_query =''
+        
         missions_query = """
                 SELECT 
                 
@@ -215,13 +217,19 @@ def missions_page():
         cur.execute(missions_query)
         mission_data = cur.fetchall()    
         
-        cur.execute(missions_query)
-        mission_data = cur.fetchall()    
         
-        cur.execute(missions_query)
-        mission_data = cur.fetchall()    
         
-        return render_template("missions.jinja", mission_data=mission_data)
+        cur.execute(client_query_1)
+        client_data = cur.fetchall()    
+        client_dict = {client['id_client']: client['name'] for client in client_data}
+        client_data = client_dict
+        
+        cur.execute(spacecraft_query_1)
+        spacecraft_data = cur.fetchall()    
+        spacecraft_dict = {spacecraft['id_spacecraft']: spacecraft['name'] for spacecraft in spacecraft_data}
+        spacecraft_data = client_dict
+        
+        return render_template("missions.jinja", mission_data=mission_data, client_data=client_data, spacecraft_data=spacecraft_data)
 
 
 

@@ -85,7 +85,9 @@
                         <option value="0">No</option>
                         <option value="1">Yes</option>
                     </select>
-                    <label> Spacecraft Name (optional) </label>              
+                    <label> Spacecraft Name (optional) </label>      
+                    <select name="spacecraft_id">   
+                    <option value="">&nbsp;</option>      
                     {% if spacecraft_data %}
                         {% for spacecraft in spacecraft_data %}
                             <option value="{{ spacecraft }}">{{spacecraft_data[spacecraft]}}</option>
@@ -93,7 +95,8 @@
                     {% endif %} 
                     </select>  
                     <label> Client Name (optional) </label> 
-                    <select name="client_id">                       
+                    <select name="client_id">     
+                    <option value="">&nbsp;</option>                        
                     {% if client_data %}
                         {% for client in client_data %}
                             <option value="{{ client }}">{{client_data[client]}}</option>
