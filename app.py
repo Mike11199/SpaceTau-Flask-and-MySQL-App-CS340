@@ -2,6 +2,8 @@ from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request, jsonify
 
+# from werkzeug.exceptions import HTTPException  # reference to allow for debugging https://flask.palletsprojects.com/en/2.2.x/errorhandling/
+
 import os
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
@@ -121,7 +123,6 @@ def delete_spacecraft(id):
 
 
 
-
 @app.route("/get_spacecraft/<int:id>")
 def retrieve_spacecraft(id):
     query = "Select * FROM Spacecrafts WHERE id_spacecraft = '%s';"
@@ -202,9 +203,58 @@ def astronauts_page():
 def clients_page():
     return render_template("clients.jinja")
 
-@app.route('/planetary-objects')
+@app.route('/planetary-objects', methods=["POST", "GET"])
 def planetary_objects_page():
-    return render_template("planetary_objects.jinja")
+    
+    
+    # DEFAULT ROUTE - Viewing the page executes SELECT statement or READ functionality
+    if request.method == "GET":
+        
+        planetary_obj_query = """
+                SELECT 
+                
+                Planetary_Objects.id_planetary_object as 'Planetary Obj ID', 
+                Planetary_Objects.name as 'Object Name', 
+                Planetary_Objects.surface_gravity_g as 'Surface Gravity (g)',  
+                Planetary_Objects.avg_distance_from_sun_au as 'Avg Distance from Sun (AU)', 
+                Planetary_Objects.is_planet as 'Is Planet?', 
+                Planetary_Objects.is_moon as 'Is Moon?'            
+
+                FROM Planetary_Objects 
+            """
+            
+        cur = mysql.connection.cursor()
+        cur.execute(planetary_obj_query)
+        planetary_obj_data = cur.fetchall()    
+
+        return render_template("planetary_objects.jinja", planetary_obj_data=planetary_obj_data)
+
+
+
+    # POST ROUTE - Executes INSERT statement for CREATE functionality to add a new record.
+    if request.method == "POST":
+        
+            planetary_obj_name = request.form["name"]
+            planetary_obj_gravity = request.form["surface_gravity"]
+            planetary_obj_distance = request.form["avg_distance"]
+            planetary_obj_is_planet = request.form["is_planet"]
+            planetary_obj_is_moon = request.form["is_moon"]
+                        
+            add_planetary_obj_query = """
+            INSERT INTO Planetary_Objects (name, surface_gravity_g, avg_distance_from_sun_au, is_planet, is_moon) 
+            VALUES (%s,%s,%s,%s,%s);
+            """
+            
+            cur = mysql.connection.cursor()
+            cur.execute(add_planetary_obj_query, (planetary_obj_name, planetary_obj_gravity, planetary_obj_distance, planetary_obj_is_planet, planetary_obj_is_moon))
+            mysql.connection.commit()
+            return redirect("/planetary-objects")
+    
+
+
+
+
+
 
 @app.route('/parts-and-spacecraft', methods=["POST", "GET"])
 def parts_and_spacecraft_page():
@@ -236,8 +286,8 @@ def parts_and_spacecraft_page():
         spacecraft_for_dropdown_filter_data = cur.fetchall()
         
         
-        
-        return render_template("parts_and_spacecraft.jinja", spacecraft_parts_data=spacecraft_parts_data, spacecraft_for_dropdown_filter_data=spacecraft_for_dropdown_filter_data)
+        return render_template("parts_and_spacecraft.jinja")
+        # return render_template("parts_and_spacecraft.jinja", spacecraft_parts_data=spacecraft_parts_data, spacecraft_for_dropdown_filter_data=spacecraft_for_dropdown_filter_data)
 
     if request.method == "POST":
         if request.form.get('addRelationship'):
@@ -247,6 +297,8 @@ def parts_and_spacecraft_page():
             cur = mysql.connection.cursor()
             cur.execute(add_relationship_query, (spacecraft_name, part_name))
             mysql.connection.commit()
+            # return render_template("parts_and_spacecraft.jinja")
+            
 
 @app.route("/update_parts_and_spacecraft/<int:id>", methods=["POST", "GET"])
 def update_part_and_spacecraft_relationship(part_id, spacecraft_id):
@@ -261,6 +313,21 @@ def update_part_and_spacecraft_relationship(part_id, spacecraft_id):
 
     return jsonify(part_id, spacecraft_id)
     
+
+# reference to allow for debugging https://flask.palletsprojects.com/en/2.2.x/errorhandling/
+# @app.errorhandler(HTTPException)
+# def handle_exception(e):
+#     """Return JSON instead of HTML for HTTP errors."""
+#     # start with the correct headers and status code from the error
+#     response = e.get_response()
+#     # replace the body with JSON
+#     response.data = json.dumps({
+#         "code": e.code,
+#         "name": e.name,
+#         "description": e.description,
+#     })
+#     response.content_type = "application/json"
+#     return response
 
 
 
