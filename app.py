@@ -181,9 +181,72 @@ def update_spacecraft(id):
        
 
 
-@app.route('/missions')
+@app.route('/missions', methods=["POST", "GET"])
 def missions_page():
-    return render_template("missions.jinja")
+    
+
+    # DEFAULT ROUTE - Viewing the page executes SELECT statement or READ functionality
+    if request.method == "GET":
+        
+        missions_query = """
+                SELECT 
+                
+                Missions.id_mission as 'Mission ID', 
+                Missions.name as 'Mission Name', 
+                Missions.contract_revenues as 'Contract Revenues',  
+                Missions.contract_costs as 'Contract Costs', 
+                Missions.contract_profit as 'Contract Profit', 
+                Missions.is_external as 'External?',            
+                Missions.mission_description as 'Description',
+                Spacecrafts.name as 'Spacecraft Name',
+                Clients.name as 'Client Name'                       
+                
+                
+                FROM Missions 
+                
+                LEFT JOIN Spacecrafts on Spacecrafts.id_spacecraft = Missions.id_spacecraft
+                LEFT JOIN Clients on Clients.id_client = Missions.id_client;
+            """
+            
+        client_query_1 = "SELECT id_client, name FROM Clients"
+        spacecraft_query_1="SELECT id_spacecraft, name from Spacecrafts "
+            
+        cur = mysql.connection.cursor()
+        cur.execute(missions_query)
+        mission_data = cur.fetchall()    
+        
+        cur.execute(missions_query)
+        mission_data = cur.fetchall()    
+        
+        cur.execute(missions_query)
+        mission_data = cur.fetchall()    
+        
+        return render_template("missions.jinja", mission_data=mission_data)
+
+
+
+    # POST ROUTE - Executes INSERT statement for CREATE functionality to add a new record.
+    if request.method == "POST":
+        
+            mission_name = request.form["name"]
+            contract_revenues = request.form["contract_revenues"]
+            contract_costs = request.form["contract_costs"]
+            external_contract = request.form["external_contract"]
+            spacecraft_id = request.form["external_contract"]       # OPTIONAL
+            client_id =request.form["external_contract"]            # OPTIONAL
+                        
+            add_planetary_obj_query = """
+            INSERT INTO Planetary_Objects (name, surface_gravity_g, avg_distance_from_sun_au, is_planet, is_moon) 
+            VALUES (%s,%s,%s,%s,%s);
+            """
+            
+            cur = mysql.connection.cursor()
+            cur.execute(add_planetary_obj_query, (planetary_obj_name, planetary_obj_gravity, planetary_obj_distance, planetary_obj_is_planet, planetary_obj_is_moon))
+            mysql.connection.commit()
+            return redirect("/missions")
+    
+
+
 
 @app.route('/parts')
 def parts_page():

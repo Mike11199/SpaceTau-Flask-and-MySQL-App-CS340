@@ -172,8 +172,14 @@
 						    <!-- Then iterate through every key in the current item dictionary -->
                             {% for key in item.keys() %}
 						         <!-- Create a <td> element with the value of that key in it -->
-                                {% if key == "id_planetary_object" %}     
-                                    <td> {{item[key]}} </td> 
+                                {% if key == "Is Planet?" or key == "Is Moon?" %}     
+                                    
+                                    {% if item[key] == 1 %}     
+                                        <td> Yes </td> 
+                                    {% else %}     
+                                        <td> No </td> 
+                                    {% endif %} 
+
                                 {% else %}     
                                     <td> {{item[key]}} </td> 
                                 {% endif %} 
