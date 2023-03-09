@@ -242,16 +242,43 @@ def missions_page():
             is_external = request.form["external_contract"]
             mission_description = request.form["mission_description"]
                         
-            spacecraft_id = request.form["spacecraft_id"]   # OPTIONAL
-            client_id =request.form["client_id"]            # OPTIONAL
-                        
-            add_mission_query = """
-            INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description, id_spacecraft, id_client) 
-            VALUES (%s,%s,%s,%s,%s);
-            """
-            
+            spacecraft_id = request.form.get(["spacecraft_id"],'noneSelected')   # OPTIONAL
+            client_id =request.form.get(["client_id"],'noneSelected')            # OPTIONAL
+           
             cur = mysql.connection.cursor()
-            cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description, spacecraft_id, client_id))
+           
+           # adding mission with NO client and NO spacecraft selected from drop down (NULL values in database OK as FKs are optional in this table)
+            if spacecraft_id == 'noneSelected' and client_id =='noneSelected':
+                add_mission_query = """
+                INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description) 
+                VALUES (%s,%s,%s,%s,%s);
+                """
+                cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description))
+            
+            # adding only client from dynamic drop down NO spacecraft
+            elif spacecraft_id == 'noneSelected' and client_id !='noneSelected':
+                add_mission_query = """
+                INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description, id_client) 
+                VALUES (%s,%s,%s,%s,%s,%s);
+                """
+                cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description, client_id))
+            
+            # adding only spacecraft from dynamic drop down NO client
+            elif spacecraft_id != 'noneSelected' and client_id =='noneSelected':
+                add_mission_query = """
+                INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description, id_spacecraft) 
+                VALUES (%s,%s,%s,%s,%s,%s);
+                """
+                cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description, spacecraft_id))
+            
+            # adding both spacecraft and client ID
+            else:
+                add_mission_query = """
+                INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description, id_spacecraft, id_client) 
+                VALUES (%s,%s,%s,%s,%s,%s,%s);
+                """
+                cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description, spacecraft_id, client_id))
+            
             mysql.connection.commit()
             return redirect("/missions")
     

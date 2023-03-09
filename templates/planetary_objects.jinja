@@ -77,9 +77,9 @@
         <form method="post" id="addPlanetaryObj">
             <legend><strong>Add Planetary Object</strong></legend>
             <fieldset class="fields">
-                <label> Name </label> <input type="text" name="name">
-                <label> Surface Gravity (g) </label> <input type="number" name="surface_gravity">
-                <label> Avg Distance from Sun (AU) </label> <input type="number" name="avg_distance">
+                <label> Name </label> <input type="text" name="name" required>
+                <label> Surface Gravity (g) </label> <input type="number" name="surface_gravity" required>
+                <label> Avg Distance from Sun (AU) </label> <input type="number" name="avg_distance" required>
                 <label> Planet? </label> 
                     <select name="is_planet">
                         <option value="0">No</option>
