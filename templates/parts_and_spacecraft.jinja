@@ -35,7 +35,7 @@
             document.getElementById('delete').style.display = 'block';
             document.getElementById('filter').style.display = 'none';
         }
-    else if (dowhat == 'all'){
+        else if (dowhat == 'all'){
             document.getElementById('browse').style.display = 'block';
             document.getElementById('insert').style.display = 'block';
             document.getElementById('update').style.display = 'block';
@@ -83,31 +83,28 @@
 
     <p></p>
     <p></p>
-    
 
 
     <div id="filter" class="filterForm">
-        <form method="POST" id="addPart">
+        <form method="GET" id="filter_relationships" name="filter_relationships">
         <legend><strong>Filter on Spacecaft</strong></legend>   
         
             <label> Spacecraft </label> 
             <select name="spacecraft_select_option" id="spacecraft_select_option">                       
-            {% if spacecraft_for_dropdown_filter_data %}
-                {% for spacecraft_item in spacecraft_for_dropdown_filter_data %}
+            {% if spacecraft_for_dropdown %}
+                {% for spacecraft_item in spacecraft_for_dropdown %}
                     <option value="{{ spacecraft_item['id_spacecraft'] }}">{{spacecraft_item['name']}}</option>
                 {% endfor %}
             {% endif %} 
             </select>   
             
         </fieldset>
-            <input class="submit_button" type="submit" id="addSpacecraft-Part-Relationship" value="Filter on Spacecraft">     
-            <input class="add_button" type="button" id="addSpacecraft-Part-Relationship" value="Remove Filters">      
+            <input class="submit_button" type="submit" id="filter-on-Spacecraft" name="filter_relationships" value="Filter on Spacecraft">     
+            <input class="add_button" type="button" onclick="browseRelationship()" value="Remove Filters">      
         </form> 
     </div>
     
-
-
-    {# FORM FOR ADDING A PART - Always Visible or Toggled by a Button above or below the table - TODO #}
+    {# FORM FOR ADDING A Relationship - Always Visible or Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
         <form method="POST" id="addRelationship">
             <legend><strong>Add Spacecaft/Part Relationship</strong></legend>
@@ -118,9 +115,12 @@
                         <option value="1">Roll Out Solar Array (ROSA)</option>
                         <option value="2">Reaction Wheel</option>
                         <option value="3">Xenon Engine</option> #}
-                        {%if spacecraft_parts_data %}
-                            {% for part in spacecraft_parts_data%}
-                                <option value="{{ part }}">{{spacecraft_parts_data[part]}}</option>
+                        {%if parts_for_dropdown %}
+                            {%for i in parts_for_dropdown%}
+                                {# {% for key, value in i.items()%} #}
+                                    <option value="{{ i['id_part'] }}">{{i['name']}}</option>
+                                {# {% endfor %} #}
+                            {% endfor %}
                         {% endif %}
                     </select>
                 <label> Spacecaft Name </label> 
@@ -129,9 +129,10 @@
                         <option value="1">Lunar Gateway</option>
                         <option value="2">Garmin Satellite</option>
                         <option value="3">Sentry Satellite</option> #}
-                        {%if spacecraft_parts_data %}
-                            {% for spacecraft in spacecraft_parts_data%}
-                                <option value="{{ spacecraft }}">{{spacecraft_parts_data[spacecraft]}}</option>
+                        {%if spacecraft_for_dropdown %}
+                            {% for i in spacecraft_for_dropdown%}
+                                <option value="{{ i['id_spacecraft'] }}">{{i['name']}}</option>
+                            {%endfor%}
                         {% endif %}
                     </select>                    
         </fieldset>
@@ -139,8 +140,6 @@
             <input class="cancel_button" type="button" value="Cancel" onClick="browseRelationship()">
         </form> 
     </div>
-    
-    {# <p>&nbsp;</p> #}
 
     {# FORM FOR UPDATING A PART - This becomes visible when the EDIT BUTTON on a record is clicked #}
     <div id="update" class="updateForm">
@@ -159,6 +158,7 @@
                         {%if spacecraft_parts_data %}
                             {% for spacecraft in spacecraft_parts_data%}
                                 <option value="{{ spacecraft }}">{{spacecraft_parts_data[spacecraft]}}</option>
+                            {%endfor%}
                         {% endif %}
                     </select>
         </fieldset>
@@ -166,9 +166,6 @@
             <input class="btn" type="button" value="cancel" onClick="browseRelationship()">
         </form> 
     </div>
-
-    {# <p>&nbsp;</p> #}
-
 
     {# FORM FOR DELETING A PART - This becomes visible when the DELETE BUTTON on a record is clicked #}
     <div id="delete" style="display: block" class="deleteForm">
@@ -188,40 +185,6 @@
         </form> 
     </div>
 
-
-    {# TABLE FOR SELECT STATEMENT - HARDCODED#}
-    {# <div id="browse" style="display: block">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Spacecaft ID</th>
-                <th scope="col">SpaceCraft Name</th>
-                <th scope="col">Part ID</th>
-                <th scope="col">Part Name</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-            </tr>        
-            </thead>
-            <tr>
-                <td align="center" >1</td>
-                <td >Lunar Gateway</td>
-                <td align="center" >1</td>
-                <td >Roll Out Solar Array (ROSA)</td>
-                <td><a href="#" onClick="updatePart('this.personID')">Edit</a></td>
-                <td><a href="#" onclick="deletePart('this.personID')">Delete</a></td>
-            </tr>
-            <tr>
-                <td align="center" >2</td>
-                <td >Garmin Satellite</td>
-                <td align="center" >1</td>
-                <td >Roll Out Solar Array (ROSA)</td>
-                <td><a href="#" onClick="updatePart('this.personID')">Edit</a></td>
-                <td><a href="#" onclick="deletePart('this.personID')">Delete</a></td>                
-            </tr>            
-            <tbody>            
-            </tbody>
-        </table>
-    </div> #}
 
     {% if spacecraft_parts_data %}
         <div id="browse" style="display: block">
@@ -261,9 +224,7 @@
 
 						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
                             <td><a href="#" onClick="updateRelationship('{{item['Spacecraft ID'], item['Part ID']}}')">Edit</a></td>
-                            <td><a href="#" onclick="deleteRelationship('{{item['Spacecraft ID'], item['Part ID']}}')">Delete</a></td>      
-                            
-                                            
+                            <td><a href="#" onclick="deleteRelationship('{{item['Spacecraft ID'], item['Part ID']}}')">Delete</a></td>            
 
 					    </tr> 
                     {% endfor %} 
@@ -271,7 +232,6 @@
             </table>
         </div>     
     {% endif %} 
-
 
     
 </body>

@@ -45,9 +45,121 @@
             document.getElementById('delete').style.display = 'none';
         }
     }
-    function newClient() { showform('insert'); }
-    function updateClient(pid) { showform('update'); }
-    function deleteClient(pid) { showform ('delete'); }
+    function newClient() {
+        showform('insert');
+    }
+
+    function updateClient(id) {
+        console.log(id);
+        url= '/get_client' + id
+        console.log(url);
+        //showform('update'); 
+        fetch(url).then(function(response) {
+        
+        return response.json();
+        }).then(function(data) {
+            
+            console.log(data)
+            document.getElementById('client_id_update').value = data[0].id_client;
+            document.getElementById('client_id_update_label').innerHTML = data[0].id_client;
+            document.getElementById('client_ein_update').value = data[0].ein;
+            document.getElementById('client_name_update').value = data[0].name;
+            document.getElementById('client_contribution_amount_update').value = data[0].contribution_amount;
+            document.getElementById('client_address_update').value = data[0].address;            
+
+            showform('update'); 
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseClient()
+        });  
+    }
+    function updateClient_Handler(id) {    
+
+        let toUpdate = document.getElementById('client_id_update').value;
+        let name = document.getElementById('client_name_update').value;
+        let ein = document.getElementById('client_ein_update').value;
+        let contribution_amount = document.getElementById('client_contribution_amount_update').value;
+        let address = document.getElementById('client_address_update').value;
+
+        const url = '/update_client/' + toUpdate;
+        const url2 = '/client'; 
+
+        const data = {
+            client_name_update: name,
+            client_ein_update: ein,
+            client_contribution_amount_update: contribution_amount,
+            client_address_update: address
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            browseClient();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            browseClient();
+        });
+}
+    function deleteClient(pid) {
+        console.log(id);
+
+        url = '/get_client/' + id
+
+        console.log(url)
+
+        fetch(url).then(function(response) {
+        
+        return response.json();
+        }).then(function(data) {
+            
+            console.log(data);
+            document.getElementById('client_id_update').value = data[0].id_client;
+            document.getElementById('client_id_update_label').innerHTML = data[0].id_client;
+            document.getElementById('client_ein_update').value = data[0].ein;
+            document.getElementById('client_name_update').value = data[0].name;
+            document.getElementById('client_contribution_amount_update').value = data[0].contribution_amount;
+            document.getElementById('client_address_update').value = data[0].address;  
+            showform ('delete'); 
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseSpacecraft()
+        });
+    }
+    function deleteSpaceCraftHandler() { 
+
+        let toDelete = document.getElementById('client_id_delete').innerHTML
+        console.log(toDelete)       
+        url = '/delete_client/' + toDelete
+        url2 = '/client' 
+
+        console.log(url)
+
+        fetch(url).then(function(response) {
+               
+        return response
+        }).then(function(data) {
+            
+            console.log(data)
+            browseClient()
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseClient()
+        });
+    }
     function browseClient() { showform ('browse'); }
     function showAll() { showform ('all'); }
 
@@ -86,9 +198,95 @@
         </form> 
     </div>
 
+    {#FORM to update client#}
+    <div id="update" class="updateForm">
+        <form method="POST" id="updateClient">
+            <legend><strong>Update Client</strong></legend>
+            <fieldset class="fields">
+                <input type="hidden" name="clientID" id="client_id_update">
+                <label> ID: </label> <div id="client_id_update_label"></div>
+                <label> EIN: </label> <input type="text" name="client_ein_update" id="client_ein_update">
+                <label> Name: </label> <input type="text" name="client_name_update" id="client_name_update">
+                <label> Contribution Amount: </label> <input type="text" name="client_contribution_amount_update" id="client_contribution_amount_update">
+                <label> Address: </label> <input type="text" name="client_address_update" id="client_address_update">
+            </fieldset>
+            <input class="submit_button" type="submit" id="UpdateSaveClient" value="Update Client" onClick="updateClient_Handler()">
+            <input class="cancel_button" type="button" value="Cancel" onClick="browseClient()">
+        </form>
+    </div>
+
+    {#FORM to delete client#}
+    <div id="delete" style="display: block" class="deleteForm">
+        <form method="POST" id="deleteClient">
+            <legend><strong>Delete Spacecaft</strong></legend>
+                <fieldset class="fields">
+                    <p>Are you sure you wish to delete the following?</p>
+                    <input type="hidden" name="ClientID" id="deleteclientID" value="1">
+                    <label><strong>Client ID:</strong></label>
+                    <div id="client_id_delete"></div>
+                    <label> <strong>Client EIN:</strong> </label> 
+                    <div id="client_ein_delete"></div>
+                    <label> <strong>Client Name:</strong> </label>
+                    <div id="client_name_delete"></div>
+                    <label> <strong>Contribution Amount:</strong> </label>
+                    <div id="client_contribution_amount_delete"></div>
+                    <label> <strong>Address:</strong> </label>
+                    <div id="client_address_delete"></div>
+                </fieldset>
+                <input class="submit_button" type="submit" id="DeleteClient" value="Delete Client" onClick="deleteClient_Handler()">
+                <input class="cancel_button" type="button" value="cancel" onClick="browseClient()">
+        </form>
+    </div>
+
+    {% if client_data %}
+        <div id="browse" style="display: block">
+            <table>
+			    <thead>
+				    <tr>
+					    <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in client_data[0].keys() %}                            
+                            <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                            <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>					
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+
+                    </tr>
+                </thead>
+
+				<tbody>
+					<!-- Now, iterate through every item in data -->
+                    {% for item in client_data %}
+					    <tr>
+						    <!-- Then iterate through every key in the current item dictionary -->
+                            {% for key in item.keys() %}
+						         <!-- Create a <td> element with the value of that key in it -->
+                                {% if key == "id_client" %}     
+                                    <td> {{item[key]}} </td> 
+                                {% else %}     
+                                    <td> {{item[key]}} </td> 
+                                {% endif %} 
+                            {% endfor %}
+
+                            <!-- Create our edit/delete buttons --> 
+                                                         
+                            {# <td><a href="/delete_client/{{item['client ID']}}" class="btn btn-default">Edit</a></td>
+						    <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td> #}
+
+						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
+                            <td><a href="#" onClick="updateClient('{{item['Client ID']}}')">Edit</a></td>
+                            <td><a href="#" onclick="deleteClient('{{item['Client ID']}}')">Delete</a></td>
+					    </tr> 
+                    {% endfor %} 
+
+            </table>
+        </div>     
+    {% endif %} 
+
 
     {# TABLE FOR SELECT STATEMENT #}    
-      <div id="browse" style="display: block">
+      {# <div id="browse" style="display: block">
       <table>
         <thead>
         <tr>
@@ -131,7 +329,7 @@
         <tbody>            
         </tbody>
     </table>
-    </div>
+    </div> #}
 
 
 </body>
