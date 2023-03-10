@@ -200,6 +200,18 @@ td {
   background-color: rgba(124, 128, 136, 0.959);
 }
 
+.updateForm2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  height: 300px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: rgba(124, 128, 136, 0.959);
+}
+
 .deleteForm {
   display: none;
   flex-direction: column;

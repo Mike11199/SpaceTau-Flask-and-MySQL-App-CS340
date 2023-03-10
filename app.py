@@ -562,6 +562,36 @@ def get_part_and_spacecraft_relationship( part_id, spacecraft_id):
     spacecraft_and_part_for_delete_form = cur.fetchall()
     return jsonify(spacecraft_and_part_for_delete_form)
 
+@app.route("/get_all_spacecrafts", methods=["POST", "GET"])
+def get_all_spacecrafts():
+    
+    query1 = """
+    SELECT *
+
+    FROM Spacecrafts
+
+    """   
+    cur = mysql.connection.cursor()
+    cur.execute(query1)
+    mysql.connection.commit()
+    spacecrafts = cur.fetchall()
+    return jsonify(spacecrafts)
+
+@app.route("/get_all_parts", methods=["POST", "GET"])
+def get_all_parts():
+    
+    query1 = """
+    SELECT *
+
+    FROM Parts
+
+    """   
+    cur = mysql.connection.cursor()
+    cur.execute(query1)
+    mysql.connection.commit()
+    spacecrafts = cur.fetchall()
+    return jsonify(spacecrafts)
+
 
 @app.route("/update_parts_and_spacecraft/<int:id>", methods=["POST", "GET"])
 def update_part_and_spacecraft_relationship(part_id, spacecraft_id):

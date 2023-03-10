@@ -53,43 +53,8 @@
     function updateRelationship(pid) { showform('update'); }
     function browseRelationship() { showform ('browse');}
     function showAll() { showform ('all'); }
-    function updateSpacecraft_Handler(id) {    
-        
-        
-        let toUpdate = document.getElementById('spacecraft_id_update').value;
-        let name = document.getElementById('spacecraft_name_update').value;
-        let in_orbit = document.getElementById('orbit_select_option').value;
-
-        const url = '/update_spacecraft/' + toUpdate;
-        const url2 = '/spacecraft'; 
-
-        const data = {
-            spacecraft_name_update: name,
-            orbit_select_option: in_orbit,
-            launched_select_option: launched,
-            soi_select_option: sphere_of_influence,
-            spacecraft_delta_v_update: delta_v_remaining,
-            spacecraft_met_update: MET_days
-        };
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            browseSpacecraft();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            browseSpacecraft();
-        });
-}
-
+    
+    
 
 
     function deleteRelationship(spacecraft_id, part_id) {    
@@ -150,6 +115,94 @@
             browseRelationship()
         });
     }  
+
+
+
+    function updateSpacecraftPartRelationship(spacecraft_id, part_id) { 
+    
+    console.log(part_id)
+    console.log(spacecraft_id)
+    url = '/get_parts_and_spacecraft/' + part_id + '/' + spacecraft_id
+
+    fetch(url).then(function(response) {
+    
+    return response.json();
+    }).then(function(data) {
+        
+        console.log(data)
+
+        let spacecraft_index = data[0]['Spacecraft ID']
+        let part_index = data[0]['Part ID']
+
+        document.getElementById('spacecraft_update_select_option').selectedIndex = spacecraft_index-1;
+        document.getElementById('part_update_select_option').selectedIndex = part_index-1;
+
+        document.getElementById('spacecraft_id_update').innerHTML = spacecraft_index
+        document.getElementById('spacecraft_name_update').innerHTML = data[0]['Spacecraft Name']
+
+        document.getElementById('part_id_update').innerHTML = part_index
+        document.getElementById('part_name_update').innerHTML = data[0]['Parts Name']
+
+        console.log(data[0]['Spacecraft ID'])
+        console.log(data[0]['Part ID'])
+
+        //document.getElementById('spacecraft_delta_v_update').value = data[0].delta_v_remaining;
+        //document.getElementById('spacecraft_met_update').value = data[0].mission_elapsed_time_days;
+
+        //document.getElementById("soi_select_option").selectedIndex = data[0].id_planetary_object -1; 
+        
+        //console.log('selecting planet with id')
+        //console.log(data[0].id_planetary_object)
+
+        showform('update'); 
+
+
+    }).catch(function(err) {
+        console.log('Fetch Error :-S', err);
+        browseSpacecraft()
+    });        
+
+    }
+    
+
+
+    function updateSpacecraft_Handler(id) {    
+        
+        
+        let toUpdate = document.getElementById('spacecraft_id_update').value;
+        let name = document.getElementById('spacecraft_name_update').value;
+        let in_orbit = document.getElementById('orbit_select_option').value;
+
+        const url = '/update_spacecraft/' + toUpdate;
+        const url2 = '/spacecraft'; 
+
+        const data = {
+            spacecraft_name_update: name,
+            orbit_select_option: in_orbit,
+            launched_select_option: launched,
+            soi_select_option: sphere_of_influence,
+            spacecraft_delta_v_update: delta_v_remaining,
+            spacecraft_met_update: MET_days
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            browseSpacecraft();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            browseSpacecraft();
+        });
+}
+
 
 </script>
 {% endblock %}
@@ -237,28 +290,55 @@
     </div>
 
     {# FORM FOR UPDATING A PART - This becomes visible when the EDIT BUTTON on a record is clicked #}
-    <div id="update" class="updateForm">
+    <div id="update" class="updateForm2">
         <form method="POST" id="updateRelationship">
-            <legend><strong>Update Person</strong></legend>
+            <legend><strong>Update Spacecraft/Part Relationship</strong></legend>
             <fieldset class="fields">
-            <input type="hidden" name="spacecraftID" id="part_id_update">
-            <label> Part Name </label> <input type="text" name="part_name" value="Part" id="part_name_update">
-            <input type="hidden" name="spacecraftID" id="spacecraft_id_update">
-            <label> Spacecraft Name </label> <input type="text" name="spacecraft_name" value="Spacecraft" id="spacecraft_name_update">
-                    {# <option value="0">&nbsp;</option>
-                    <option value="1" selected>Gemenon</option>
-                    <option value="2">Leonis</option>
-                    <option value="3">Caprica</option> #}
 
-                        {%if spacecraft_parts_data %}
-                            {% for spacecraft in spacecraft_parts_data%}
-                                <option value="{{ spacecraft }}">{{spacecraft_parts_data[spacecraft]}}</option>
+            <div>
+                <label><strong>Existing Spacecraft ID: </strong> </label> 
+                <div  name="spacecraft_id_update" id="spacecraft_id_update"></div>
+                <label><strong>Existing Spacecraft Name: </strong> </label> 
+                <div  name="spacecraft_id_update" id="spacecraft_name_update"></div>
+            </div>
+
+            <p></p>
+
+            <div>
+                <label> <strong>Existing Part ID: </strong></label> 
+                <div  name="part_id_update" id="part_id_update"></div>
+                <label><strong> Existing Part Name: </strong></label> 
+                <div  name="part_id_update" id="part_name_update"></div>      
+            </div>     
+            
+            <p></p>
+            <p></p>
+
+            <label> New Spacecraft Name </label> 
+                    <select id="spacecraft_update_select_option">
+                        {%if spacecraft_for_dropdown %}
+                            {% for i in spacecraft_for_dropdown%}
+                                <option value="{{ i['id_spacecraft'] }}">{{i['name']}}</option>
                             {%endfor%}
                         {% endif %}
                     </select>
+
+
+
+            <label> New Part Name </label> 
+                    <select id="part_update_select_option">
+                        {%if parts_for_dropdown %}
+                            {%for i in parts_for_dropdown%}
+                                {# {% for key, value in i.items()%} #}
+                                    <option value="{{ i['id_part'] }}">{{i['name']}}</option>
+                                {# {% endfor %} #}
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+
         </fieldset>
-            <input class="submit_button" type="submit" id="UpdateSaveRelationship" value="Save Update Relationship">
-            <input class="cancel_button" type="button" value="cancel" onClick="browseRelationship()">
+            <input class="submit_button" type="submit" id="UpdateSaveRelationship" value="Save Updated Relationship">
+            <input class="cancel_button" type="button" value="Cancel" onClick="browseRelationship()">
         </form> 
     </div>
 
@@ -332,7 +412,7 @@
 						    <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td> #}
 
 						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
-                            <td><a href="#" onClick="updateRelationship('{{item['Spacecraft ID']}}', '{{item['Part ID']}}')">Edit</a></td>
+                            <td><a href="#" onClick="updateSpacecraftPartRelationship('{{item['Spacecraft ID']}}', '{{item['Part ID']}}')">Edit</a></td>
                             <td><a href="#" onclick="deleteRelationship('{{item['Spacecraft ID']}}', '{{item['Part ID']}}')">Delete</a></td>            
 
 					    </tr> 
