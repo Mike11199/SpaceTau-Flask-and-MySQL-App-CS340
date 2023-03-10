@@ -74,32 +74,31 @@
 
     {# FORM FOR ADDING A PLANETARY OBJECT- Always Visible or Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
-        <form method="POST" id="addPlanetaryObj">
+        <form method="post" id="addPlanetaryObj">
             <legend><strong>Add Planetary Object</strong></legend>
             <fieldset class="fields">
-                <label> Name </label> <input type="text" name="name">
-                <label> Surface Gravity (g) </label> <input type="number" name="surface_gravity">
-                <label> Avg Distance from Sun (AU) </label> <input type="number" name="avg_distance">
+                <label> Name </label> <input type="text" name="name" required>
+                <label> Surface Gravity (g) </label> <input type="number" name="surface_gravity" required>
+                <label> Avg Distance from Sun (AU) </label> <input type="number" name="avg_distance" required>
                 <label> Planet? </label> 
-                    <select name="in_orbit">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Yes</option>
-                        <option value="2">No</option>
+                    <select name="is_planet">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>                        
                     </select>
                 <label> Moon? </label> 
-                    <select name="in_orbit">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Yes</option>
-                        <option value="2">No</option>
+                    <select name="is_moon">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>      
                     </select>
         </fieldset>
-            <input class="submit_button" type="submit" id="addPart" value="Add Part">
-            <input class="cancel_button" type="button" value="cancel" onClick="browsePlanetaryObj()">
+            <input class="submit_button" type="submit" id="addPart" value="Add Planetary Object">
+            <input class="cancel_button" type="button" value="Cancel" onClick="browsePlanetaryObj()">
         </form> 
     </div>
     
-    {# TABLE FOR SELECT STATEMENT #}    
-    <div id="browse" style="display: block">
+
+    {# TABLE FOR SELECT STATEMENT - HARDCODED#}    
+    {# <div id="browse" style="display: block">
     <table>
         <thead>
         <tr>
@@ -146,7 +145,65 @@
         <tbody>            
         </tbody>
     </table>
-    </div>
+    </div> #}
     
+    
+    {% if planetary_obj_data %}
+        <div id="browse" style="display: block">
+            <table>
+			    <thead>
+				    <tr>
+					    <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in planetary_obj_data[0].keys() %}                            
+                            <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                            <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>					
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+
+                    </tr>
+                </thead>
+
+				<tbody>
+					<!-- Now, iterate through every item in data -->
+                    {% for item in planetary_obj_data %}
+					    <tr>
+						    <!-- Then iterate through every key in the current item dictionary -->
+                            {% for key in item.keys() %}
+						         <!-- Create a <td> element with the value of that key in it -->
+                                {% if key == "Is Planet?" or key == "Is Moon?" %}     
+                                    
+                                    {% if item[key] == 1 %}     
+                                        <td> Yes </td> 
+                                    {% else %}     
+                                        <td> No </td> 
+                                    {% endif %} 
+
+                                {% else %}     
+                                    <td> {{item[key]}} </td> 
+                                {% endif %} 
+                            {% endfor %}
+
+                            <!-- Create our edit/delete buttons --> 
+                                                         
+                            {# <td><a href="/delete_spacecraft/{{item['Spacecraft ID']}}" class="btn btn-default">Edit</a></td>
+						    <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td> #}
+
+						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
+                            <td><a href="#" onClick="placeholder">Edit</a></td>
+                            <td><a href="#" onclick="placeholder">Delete</a></td>      
+                            
+                                            
+
+					    </tr> 
+                    {% endfor %} 
+
+            </table>
+        </div>     
+    {% endif %} 
+
+
+
 </body>
 </html>

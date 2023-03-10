@@ -77,40 +77,56 @@
         <form method="POST" id="addMission">
             <legend><strong>Add Mission</strong></legend>
             <fieldset class="fields">
-                <label> Name </label> <input type="text" name="name">
-                <label> Contract Revenues </label> <input type="number" name="contract_revenues">
-                <label> Contract Costs </label> <input type="number" name="contract_revenues">                
+                <label> Name </label> <input type="text" name="name" required>
+                <label> Contract Revenues </label> <input type="number" name="contract_revenues" required>
+                <label> Contract Costs </label> <input type="number" name="contract_costs" required>                
                 <label> External Contract? </label> 
-                    <select name="external_contract">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Yes</option>
-                        <option value="2">No</option>
-                    </select>
+                <select name="external_contract">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
 
-                {# TODO:  client/spacecraft name needs to be drop downs populated by select statements  #}
-                <label> Spacecraft Name (optional) </label> 
-                    <select name="spacecraft_name">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Spacecaft 1</option>
-                        <option value="2">Spacecaft 2</option>
-                        <option value="3">Spacecaft 3</option>
-                    </select>
+                <p></p>
+
+                {# <label> Part Description </label> <input type="textarea" name="description" class="largeTextBox"> #}
+                <div class="largeTextBox">
+                    <label> Mission Description  </label> 
+                    <p></p>
+                    <textarea name = "mission_description" required>
+                    Enter details here...
+                    </textarea>
+                </div>
+
+                <p></p>
+
+
+                
+                <label> Spacecraft Name (optional) </label>      
+                <select name="spacecraft_id">   
+                <option selected value="noneSelected">&nbsp;</option>      
+                {% if spacecraft_data %}
+                    {% for spacecraft in spacecraft_data %}
+                        <option value="{{ spacecraft }}">{{spacecraft_data[spacecraft]}}</option>
+                    {% endfor %}
+                {% endif %} 
+                </select>  
                 <label> Client Name (optional) </label> 
-                    <select name="client_name">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Client 1</option>
-                        <option value="2">Client 2</option>
-                        <option value="3">Client 3</option>
-                    </select>
-
+                <select name="client_id">     
+                <option selected value="noneSelected">&nbsp;</option>                        
+                {% if client_data %}
+                    {% for client in client_data %}
+                        <option value="{{ client }}">{{client_data[client]}}</option>
+                    {% endfor %}
+                {% endif %} 
+                </select>         
         </fieldset>
             <input class="submit_button" type="submit" id="addMission" value="Add Mission">
             <input class="cancel_button" type="button" value="Cancel" onClick="browseMission()">
         </form> 
     </div>
 
-    {# TABLE FOR SELECT STATEMENT #}
-    <div id="browse" style="display: block">
+    {# TABLE FOR SELECT STATEMENT - HARD CODED #}
+    {# <div id="browse" style="display: block">
         <table>
         <thead>
         <tr>
@@ -143,7 +159,67 @@
         <tbody>            
         </tbody>
         </table>
-    </div>
+    </div> #}
     
+   
+    {% if mission_data %}
+        <div id="browse" style="display: block">
+            <table>
+			    <thead>
+				    <tr>
+					    <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in mission_data[0].keys() %}                            
+                            <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                            <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>					
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+
+                    </tr>
+                </thead>
+
+				<tbody>
+					<!-- Now, iterate through every item in data -->
+                    {% for item in mission_data %}
+					    <tr>
+						    <!-- Then iterate through every key in the current item dictionary -->
+                            {% for key in item.keys() %}
+						         <!-- Create a <td> element with the value of that key in it -->
+                                {% if key == "External?" %}     
+                                    
+                                    {% if item[key] == 1 %}     
+                                        <td> Yes </td> 
+                                    {% else %}     
+                                        <td> No </td> 
+                                    {% endif %} 
+
+                                {% else %}     
+                                    <td> {{item[key]}} </td> 
+                                {% endif %} 
+                            {% endfor %}
+
+                            <!-- Create our edit/delete buttons --> 
+                                                         
+                            {# <td><a href="/delete_spacecraft/{{item['Spacecraft ID']}}" class="btn btn-default">Edit</a></td>
+						    <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td> #}
+
+						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
+                            <td><a href="#" onClick="placeholder">Edit</a></td>
+                            <td><a href="#" onclick="placeholder">Delete</a></td>      
+                            
+                                            
+
+					    </tr> 
+                    {% endfor %} 
+
+            </table>
+        </div>     
+    {% endif %} 
+
+
+
+
+
 </body>
 </html>

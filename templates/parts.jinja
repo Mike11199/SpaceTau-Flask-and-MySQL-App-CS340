@@ -80,16 +80,16 @@
         <form method="POST" id="addPart">
             <legend><strong>Add Part</strong></legend>
             <fieldset class="fields">
-                <label> Name </label> <input type="text" name="name">
-                <label> Manufacturer </label> <input type="text" name="manufacturer">
-                <label> Mass (kg) </label> <input type="number" name="mass">
-                <label> Cost </label> <input type="number" name="cost">
+                <label> Name </label> <input type="text" name="name" required>
+                <label> Manufacturer </label> <input type="text" name="manufacturer" required>
+                <label> Mass (kg) </label> <input type="number" name="mass" required>
+                <label> Cost </label> <input type="number" name="cost" required>
                 <p></p>
                 {# <label> Part Description </label> <input type="textarea" name="description" class="largeTextBox"> #}
                 <div class="largeTextBox">
                     <label> Part Description  </label> 
                     <p></p>
-                    <textarea name = "description" >
+                    <textarea name = "description" required>
                     Enter details here...
                     </textarea>
                 </div>

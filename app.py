@@ -2,6 +2,8 @@ from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request, jsonify
 
+# from werkzeug.exceptions import HTTPException  # reference to allow for debugging https://flask.palletsprojects.com/en/2.2.x/errorhandling/
+
 import os
 # from dotenv import load_dotenv, find_dotenv
 # load_dotenv(find_dotenv())
@@ -120,7 +122,6 @@ def delete_spacecraft(id):
 
 
 
-
 @app.route("/get_spacecraft/<int:id>")
 def retrieve_spacecraft(id):
     query = "Select * FROM Spacecrafts WHERE id_spacecraft = '%s';"
@@ -154,19 +155,145 @@ def update_spacecraft(id):
     return jsonify(id)
 
 
-@app.route('/missions')
+@app.route('/missions', methods=["POST", "GET"])
 def missions_page():
-    return render_template("missions.jinja")
+    
 
-@app.route('/parts')
+    # DEFAULT ROUTE - Viewing the page executes SELECT statement or READ functionality
+    if request.method == "GET":
+        
+        missions_query =''
+        
+        missions_query = """
+                SELECT 
+                
+                Missions.id_mission as 'Mission ID', 
+                Missions.name as 'Mission Name', 
+                Missions.contract_revenues as 'Contract Revenues',  
+                Missions.contract_costs as 'Contract Costs', 
+                Missions.contract_profit as 'Contract Profit', 
+                Missions.is_external as 'External?',            
+                Missions.mission_description as 'Description',
+                Spacecrafts.name as 'Spacecraft Name',
+                Clients.name as 'Client Name'                       
+                
+                
+                FROM Missions 
+                
+                LEFT JOIN Spacecrafts on Spacecrafts.id_spacecraft = Missions.id_spacecraft
+                LEFT JOIN Clients on Clients.id_client = Missions.id_client;
+            """
+            
+        client_query_1 = "SELECT id_client, name FROM Clients"
+        spacecraft_query_1="SELECT id_spacecraft, name from Spacecrafts "
+            
+        cur = mysql.connection.cursor()
+        cur.execute(missions_query)
+        mission_data = cur.fetchall()    
+        
+        
+        
+        cur.execute(client_query_1)
+        client_data = cur.fetchall()    
+        client_dict = {client['id_client']: client['name'] for client in client_data}
+        client_data = client_dict
+        
+        cur.execute(spacecraft_query_1)
+        spacecraft_data = cur.fetchall()    
+        spacecraft_dict = {spacecraft['id_spacecraft']: spacecraft['name'] for spacecraft in spacecraft_data}
+        spacecraft_data = spacecraft_dict
+        
+        return render_template("missions.jinja", mission_data=mission_data, client_data=client_data, spacecraft_data=spacecraft_data)
+
+
+
+    # POST ROUTE - Executes INSERT statement for CREATE functionality to add a new record.
+    if request.method == "POST":
+        
+            mission_name = request.form["name"]
+            contract_revenues = request.form["contract_revenues"]
+            contract_costs = request.form["contract_costs"]
+            is_external = request.form["external_contract"]
+            mission_description = request.form["mission_description"]
+                        
+            spacecraft_id = request.form["spacecraft_id"]   # OPTIONAL
+            client_id =request.form["client_id"]            # OPTIONAL
+            
+            # spacecraft_id = 'noneSelected'
+            # client_id = 'noneSelected'
+           
+            cur = mysql.connection.cursor()
+           
+           # adding mission with NO client and NO spacecraft selected from drop down (NULL values in database OK as FKs are optional in this table)
+            if spacecraft_id == 'noneSelected' and client_id =='noneSelected':
+                add_mission_query = """
+                INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description) 
+                VALUES (%s,%s,%s,%s,%s);
+                """
+                cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description))
+            
+            # adding only client from dynamic drop down NO spacecraft
+            elif spacecraft_id == 'noneSelected' and client_id !='noneSelected':
+                add_mission_query = """
+                INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description, id_client) 
+                VALUES (%s,%s,%s,%s,%s,%s);
+                """
+                cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description, client_id))
+            
+            # adding only spacecraft from dynamic drop down NO client
+            elif spacecraft_id != 'noneSelected' and client_id =='noneSelected':
+                add_mission_query = """
+                INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description, id_spacecraft) 
+                VALUES (%s,%s,%s,%s,%s,%s);
+                """
+                cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description, spacecraft_id))
+            
+            # adding both spacecraft and client ID
+            else:
+                add_mission_query = """
+                INSERT INTO Missions (name, contract_revenues, contract_costs, is_external, mission_description, id_spacecraft, id_client) 
+                VALUES (%s,%s,%s,%s,%s,%s,%s);
+                """
+                cur.execute(add_mission_query, (mission_name, contract_revenues, contract_costs, is_external, mission_description, spacecraft_id, client_id))
+            
+            mysql.connection.commit()
+            return redirect("/missions")
+    
+
+
+
+@app.route('/parts', methods=["POST", "GET"])
 def parts_page():
 
-    query = "SELECT * FROM Parts;"
-    cur = mysql.connection.cursor()
-    cur.execute(query)
-    parts_data = cur.fetchall()
+ 
+    
+    if request.method == "GET":
+        query = "SELECT * FROM Parts;"
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        parts_data = cur.fetchall()    
 
-    return render_template("parts.jinja", parts_data=parts_data)
+        return render_template("parts.jinja", parts_data=parts_data)
+
+    
+    if request.method == "POST":
+        part_name = request.form["name"]
+        part_manufacturer = request.form["manufacturer"]
+        part_mass = request.form["mass"]
+        part_cost = request.form["cost"]
+        part_description = request.form["description"]
+                    
+        add_parts_query = """
+        INSERT INTO Parts (name, manufacturer, mass_kg, cost, part_description) 
+        VALUES (%s,%s,%s,%s,%s);
+        """
+        
+        cur = mysql.connection.cursor()
+        cur.execute(add_parts_query, (part_name, part_manufacturer, part_mass, part_cost, part_description))
+        mysql.connection.commit()
+        return redirect("/parts")
+
+
 
 @app.route('/astronauts', methods=["GET", "POST"])
 def astronauts_page():
@@ -258,9 +385,58 @@ def delete_client(id):
     mysql.connection.commit()
     return jsonify({'Success': 'Spacecraft Deleted!'}), 200
 
-@app.route('/planetary-objects')
+@app.route('/planetary-objects', methods=["POST", "GET"])
 def planetary_objects_page():
-    return render_template("planetary_objects.jinja")
+    
+    
+    # DEFAULT ROUTE - Viewing the page executes SELECT statement or READ functionality
+    if request.method == "GET":
+        
+        planetary_obj_query = """
+                SELECT 
+                
+                Planetary_Objects.id_planetary_object as 'Planetary Obj ID', 
+                Planetary_Objects.name as 'Object Name', 
+                Planetary_Objects.surface_gravity_g as 'Surface Gravity (g)',  
+                Planetary_Objects.avg_distance_from_sun_au as 'Avg Distance from Sun (AU)', 
+                Planetary_Objects.is_planet as 'Is Planet?', 
+                Planetary_Objects.is_moon as 'Is Moon?'            
+
+                FROM Planetary_Objects 
+            """
+            
+        cur = mysql.connection.cursor()
+        cur.execute(planetary_obj_query)
+        planetary_obj_data = cur.fetchall()    
+
+        return render_template("planetary_objects.jinja", planetary_obj_data=planetary_obj_data)
+
+
+
+    # POST ROUTE - Executes INSERT statement for CREATE functionality to add a new record.
+    if request.method == "POST":
+        
+            planetary_obj_name = request.form["name"]
+            planetary_obj_gravity = request.form["surface_gravity"]
+            planetary_obj_distance = request.form["avg_distance"]
+            planetary_obj_is_planet = request.form["is_planet"]
+            planetary_obj_is_moon = request.form["is_moon"]
+                        
+            add_planetary_obj_query = """
+            INSERT INTO Planetary_Objects (name, surface_gravity_g, avg_distance_from_sun_au, is_planet, is_moon) 
+            VALUES (%s,%s,%s,%s,%s);
+            """
+            
+            cur = mysql.connection.cursor()
+            cur.execute(add_planetary_obj_query, (planetary_obj_name, planetary_obj_gravity, planetary_obj_distance, planetary_obj_is_planet, planetary_obj_is_moon))
+            mysql.connection.commit()
+            return redirect("/planetary-objects")
+    
+
+
+
+
+
 
 @app.route('/parts-and-spacecraft', methods=["POST", "GET"])
 def parts_and_spacecraft_page():
@@ -288,6 +464,7 @@ def parts_and_spacecraft_page():
         query2 = "SELECT id_spacecraft, name FROM Spacecrafts;"
         cur = mysql.connection.cursor()
         cur.execute(query2)
+
         spacecraft_for_dropdown = cur.fetchall()
 
         query3 = "SELECT id_part, name FROM Parts;"
@@ -360,6 +537,7 @@ def parts_and_spacecraft_page():
 #     spacecraft_data2 = cur.fetchall()
 #     return jsonify(spacecraft_data2), 200
 
+
 @app.route("/update_parts_and_spacecraft/<int:id>", methods=["POST", "GET"])
 def update_part_and_spacecraft_relationship(part_id, spacecraft_id):
     data = request.get_json()
@@ -373,6 +551,21 @@ def update_part_and_spacecraft_relationship(part_id, spacecraft_id):
 
     return jsonify(part_id, spacecraft_id)
 
+
+# reference to allow for debugging https://flask.palletsprojects.com/en/2.2.x/errorhandling/
+# @app.errorhandler(HTTPException)
+# def handle_exception(e):
+#     """Return JSON instead of HTML for HTTP errors."""
+#     # start with the correct headers and status code from the error
+#     response = e.get_response()
+#     # replace the body with JSON
+#     response.data = json.dumps({
+#         "code": e.code,
+#         "name": e.name,
+#         "description": e.description,
+#     })
+#     response.content_type = "application/json"
+#     return response
 
 
 
