@@ -482,7 +482,7 @@ def parts_and_spacecraft_page():
 
             filter_id = request.form['spacecraft_select_option']
             print(filter_id)
-            query0 = """
+            query1 = """
                 SELECT
 
                 Spacecraft_has_Parts.id_spacecraft as 'Spacecraft ID',
@@ -497,7 +497,7 @@ def parts_and_spacecraft_page():
                 WHERE Spacecraft_has_Parts.id_spacecraft=%s;
             """
             cur = mysql.connection.cursor()
-            cur.execute(query0, (filter_id))
+            cur.execute(query1, (filter_id))
             spacecraft_parts_data = cur.fetchall()
 
             query2 = "SELECT id_spacecraft, name FROM Spacecrafts;"
