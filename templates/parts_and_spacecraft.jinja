@@ -57,6 +57,16 @@
      }
     function showAll() { showform ('all'); }
 
+  //  function changeSelectedCell() { 
+
+        //    let test = document.getElementById('spacecraft_select_option').getElementsByTagName('option')
+          //  console.log(test)
+ //       }
+
+  //  window.onload = function() {
+   //     changeSelectedCell()
+  //  };
+
 </script>
 {% endblock %}
 
@@ -86,7 +96,7 @@
 
 
     <div id="filter" class="filterForm">
-        <form method="GET" id="filter_relationships" name="filter_relationships">
+        <form method="post" id="filter_relationships" name="filter_relationships">
         <legend><strong>Filter on Spacecaft</strong></legend>   
         
             <label> Spacecraft </label> 
@@ -205,17 +215,27 @@
 
 				<tbody>
 					<!-- Now, iterate through every item in data -->
+
+                    {# https://jinja.palletsprojects.com/en/latest/templates/#assignments #}
+                    {% set row_count = 0 %}
+                    
                     {% for item in spacecraft_parts_data %}
 					    <tr>
 						    <!-- Then iterate through every key in the current item dictionary -->
+
                             {% for key in item.keys() %}
+                            {% set col_count = 0 %}
+
 						         <!-- Create a <td> element with the value of that key in it -->
                                 {% if key == "id_planetary_object" %}     
-                                    <td> {{item[key]}} </td> 
+                                    <td id='{{loop.index}}_{{col_count}}'> {{item[key]}} </td> 
                                 {% else %}     
-                                    <td> {{item[key]}} </td> 
+                                    <td id='{{loop.index}}_{{col_count}}'> {{item[key]}} </td> 
                                 {% endif %} 
+
+                            {% set col_count = col_count + 1 %}
                             {% endfor %}
+                            
 
                             <!-- Create our edit/delete buttons --> 
                                                          
@@ -227,6 +247,7 @@
                             <td><a href="#" onclick="deleteRelationship('{{item['Spacecraft ID'], item['Part ID']}}')">Delete</a></td>            
 
 					    </tr> 
+                    {% set row_count = row_count + 1 %}
                     {% endfor %} 
 
             </table>

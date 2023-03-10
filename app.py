@@ -475,39 +475,38 @@ def parts_and_spacecraft_page():
         return render_template("parts_and_spacecraft.jinja", spacecraft_parts_data=spacecraft_parts_data, spacecraft_for_dropdown=spacecraft_for_dropdown, parts_for_dropdown=parts_for_dropdown)
 
     if request.method == "POST":
-        if request.form.get('filter_relationships'):
-            print("Got filter form request")
-            filter_id = request.form['spacecraft_select_option']
-            print(filter_id)
-            query0 = """
-                SELECT
 
-                Spacecraft_has_Parts.id_spacecraft as 'Spacecraft ID',
-                Spacecrafts.name as 'Spacecraft Name',
-                Spacecraft_has_Parts.id_part as 'Part ID',
-                Parts.name as 'Parts Name'
+        filter_id = request.form['spacecraft_select_option']
+        print(filter_id)
+        query0 = """
+            SELECT
 
-                FROM Spacecraft_has_Parts
+            Spacecraft_has_Parts.id_spacecraft as 'Spacecraft ID',
+            Spacecrafts.name as 'Spacecraft Name',
+            Spacecraft_has_Parts.id_part as 'Part ID',
+            Parts.name as 'Parts Name'
 
-                LEFT JOIN Spacecrafts on Spacecrafts.id_spacecraft = Spacecraft_has_Parts.id_spacecraft
-                LEFT JOIN Parts on Parts.id_part = Spacecraft_has_Parts.id_part
-                WHERE Spacecraft_has_Parts.id_spacecraft=%s;
-            """
-            cur = mysql.connection.cursor()
-            cur.execute(query0, (filter_id))
-            spacecraft_parts_data = cur.fetchall()
+            FROM Spacecraft_has_Parts
 
-            query2 = "SELECT id_spacecraft, name FROM Spacecrafts;"
-            cur = mysql.connection.cursor()
-            cur.execute(query2)
-            spacecraft_for_dropdown = cur.fetchall()
+            LEFT JOIN Spacecrafts on Spacecrafts.id_spacecraft = Spacecraft_has_Parts.id_spacecraft
+            LEFT JOIN Parts on Parts.id_part = Spacecraft_has_Parts.id_part
+            WHERE Spacecraft_has_Parts.id_spacecraft=%s;
+        """
+        cur = mysql.connection.cursor()
+        cur.execute(query0, (filter_id))
+        spacecraft_parts_data = cur.fetchall()
 
-            query3 = "SELECT id_part, name FROM Parts;"
-            cur = mysql.connection.cursor()
-            cur.execute(query3)
-            parts_for_dropdown = cur.fetchall()
+        query2 = "SELECT id_spacecraft, name FROM Spacecrafts;"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        spacecraft_for_dropdown = cur.fetchall()
 
-            return render_template("parts_and_spacecraft.jinja", spacecraft_parts_data=spacecraft_parts_data, spacecraft_for_dropdown=spacecraft_for_dropdown, parts_for_dropdown=parts_for_dropdown)
+        query3 = "SELECT id_part, name FROM Parts;"
+        cur = mysql.connection.cursor()
+        cur.execute(query3)
+        parts_for_dropdown = cur.fetchall()
+
+        return render_template("parts_and_spacecraft.jinja", spacecraft_parts_data=spacecraft_parts_data, spacecraft_for_dropdown=spacecraft_for_dropdown, parts_for_dropdown=parts_for_dropdown)
 
         #if request.form.get('addRelationship'):
         part_id = request.form["part_name"]
