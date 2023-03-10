@@ -51,8 +51,22 @@
     }
     function newRelationship() { showform('insert'); }
     function updateRelationship(pid) { showform('update'); }
-    function browseRelationship() { showform ('browse');}
+    function deleteRelationship(pid) { showform ('delete'); }
+    function browseRelationship() { showform ('browse');
+    
+     }
     function showAll() { showform ('all'); }
+
+  //  function changeSelectedCell() { 
+
+        //    let test = document.getElementById('spacecraft_select_option').getElementsByTagName('option')
+          //  console.log(test)
+ //       }
+
+  //  window.onload = function() {
+   //     changeSelectedCell()
+  //  };
+  
     function updateSpacecraft_Handler(id) {    
         
         
@@ -92,13 +106,12 @@
 
 
 
-    function deleteRelationship(spacecraft_id, part_id) {    
+    function deleteSpacecraft(id) {    
+        
+        console.log(id)
+        console.log('what')
 
-        showform ('delete'); 
-
-        console.log(part_id)
-        console.log(spacecraft_id)
-        url = '/get_parts_and_spacecraft/' + part_id + '/' + spacecraft_id
+        url = '/get_spacecraft/' + id
 
         console.log(url)
 
@@ -108,13 +121,15 @@
         }).then(function(data) {
             
             console.log(data)
-            document.getElementById('part_id_delete').innerHTML = data[0]['Part ID'];
-            document.getElementById('part_name_delete').innerHTML = data[0]['Parts Name'];
-
-            document.getElementById('spacecraft_id_delete').innerHTML = data[0]['Spacecraft ID'];
-            document.getElementById('spacecraft_name_delete').innerHTML = data[0]['Spacecraft Name'];
-
+            document.getElementById('spacecraft_id_delete').innerHTML = data[0].id_spacecraft;
+            document.getElementById('spacecraft_name_delete').innerHTML = data[0].name;
+            document.getElementById('spacecraft_in_orbit_delete').innerHTML = data[0].in_orbit;
+            document.getElementById('spacecraft_launched_delete').innerHTML = data[0].launched;
+            document.getElementById('spacecraft_delta_v_delete').innerHTML = data[0].delta_v_remaining;
+            document.getElementById('spacecraft_met_delete').innerHTML = data[0].mission_elapsed_time_days;
+            document.getElementById('spacecraft_sphere_of_influence_delete').innerHTML = data[0].id_planetary_object;     
             showform ('delete'); 
+
 
         }).catch(function(err) {
             console.log('Fetch Error :-S', err);
@@ -123,16 +138,12 @@
                                     }
 
 
+    function deleteSpaceCraftHandler() { 
 
-    function deleteRelationshipHandler() { 
-
-        part_id_to_delete = document.getElementById('part_id_delete').innerHTML
-        spacecraft_id_to_delete = document.getElementById('spacecraft_id_delete').innerHTML
-
-        console.log(part_id_to_delete)    
-        console.log(spacecraft_id_to_delete)      
-
-        url = '/delete_spacecraft_part_relationship/' + part_id_to_delete + '/' + spacecraft_id_to_delete
+        let toDelete = document.getElementById('spacecraft_id_delete').innerHTML
+        console.log(toDelete)       
+        url = '/delete_spacecraft/' + toDelete
+        url2 = '/spacecraft' 
 
         console.log(url)
 
@@ -142,12 +153,12 @@
         }).then(function(data) {
             
             console.log(data)
-            browseRelationship()
+            browseSpacecraft()
 
 
         }).catch(function(err) {
             console.log('Fetch Error :-S', err);
-            browseRelationship()
+            browseSpacecraft()
         });
     }  
 
@@ -257,8 +268,8 @@
                         {% endif %}
                     </select>
         </fieldset>
-            <input class="submit_button" type="submit" id="UpdateSaveRelationship" value="Save Update Relationship">
-            <input class="cancel_button" type="button" value="cancel" onClick="browseRelationship()">
+            <input class="btn" type="submit" id="UpdateSaveRelationship" value="Save Update Relationship">
+            <input class="btn" type="button" value="cancel" onClick="browseRelationship()">
         </form> 
     </div>
 
@@ -271,16 +282,12 @@
                 <input type="hidden" name="relationshipID" id="deleteRelationshipID" value="1">
                 <label><strong>Part ID:</strong></label>
                 <div id="part_id_delete"></div>
-                <label><strong>Part Name:</strong></label>
-                <div id="part_name_delete"></div>
                 <label><strong>Spacecaft ID:</strong></label>
                 <div id="spacecraft_id_delete"></div>
-                <label><strong>Spacecaft Name:</strong></label>
-                <div id="spacecraft_name_delete"></div>
      
             </fieldset>
-            <input class="submit_button" type="submit" id="deleteRelationship" value="Delete Relationship" onClick="deleteRelationshipHandler()">
-            <input class="cancel_button" type="button" value="Cancel" onClick="browseRelationship()">
+            <input class="btn" type="submit" id="deleteRelationship" value="Delete Relationship">
+            <input class="btn" type="button" value="cancel" onClick="browseRelationship()">
         </form> 
     </div>
 
@@ -332,8 +339,8 @@
 						    <td><a href="edit_people/{{item.id}}" class="btn btn-default">Edit</a></td> #}
 
 						    {# <td><a href="delete_people/{{item.id}}" class="btn btn-default">Delete</a></td> #}
-                            <td><a href="#" onClick="updateRelationship('{{item['Spacecraft ID']}}', '{{item['Part ID']}}')">Edit</a></td>
-                            <td><a href="#" onclick="deleteRelationship('{{item['Spacecraft ID']}}', '{{item['Part ID']}}')">Delete</a></td>            
+                            <td><a href="#" onClick="updateRelationship('{{item['Spacecraft ID'], item['Part ID']}}')">Edit</a></td>
+                            <td><a href="#" onclick="deleteRelationship('{{item['Spacecraft ID'], item['Part ID']}}')">Delete</a></td>            
 
 					    </tr> 
                     {% set row_count = row_count + 1 %}

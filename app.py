@@ -434,10 +434,6 @@ def planetary_objects_page():
     
 
 
-
-
-
-
 @app.route('/parts-and-spacecraft', methods=["POST", "GET"])
 def parts_and_spacecraft_page():
 
@@ -543,6 +539,29 @@ def parts_and_spacecraft_page():
 #     spacecraft_data2 = cur.fetchall()
 #     return jsonify(spacecraft_data2), 200
 
+@app.route("/get_parts_and_spacecraft/<int:part_id>/<int:spacecraft_id>", methods=["POST", "GET"])
+def get_part_and_spacecraft_relationship( part_id, spacecraft_id):
+    
+    query1 = """
+    SELECT
+
+    Spacecraft_has_Parts.id_spacecraft as 'Spacecraft ID',
+    Spacecrafts.name as 'Spacecraft Name',
+    Spacecraft_has_Parts.id_part as 'Part ID',
+    Parts.name as 'Parts Name'
+
+    FROM Spacecraft_has_Parts
+
+    LEFT JOIN Spacecrafts on Spacecrafts.id_spacecraft = Spacecraft_has_Parts.id_spacecraft
+    LEFT JOIN Parts on Parts.id_part = Spacecraft_has_Parts.id_part
+    WHERE Spacecraft_has_Parts.id_spacecraft=%s AND Spacecraft_has_Parts.id_part=%s;
+    """   
+    cur = mysql.connection.cursor()
+    cur.execute(query1, (spacecraft_id, part_id))
+    mysql.connection.commit()
+    spacecraft_and_part_for_delete_form = cur.fetchall()
+    return jsonify(spacecraft_and_part_for_delete_form)
+
 
 @app.route("/update_parts_and_spacecraft/<int:id>", methods=["POST", "GET"])
 def update_part_and_spacecraft_relationship(part_id, spacecraft_id):
@@ -557,6 +576,22 @@ def update_part_and_spacecraft_relationship(part_id, spacecraft_id):
 
     return jsonify(part_id, spacecraft_id)
 
+@app.route("/delete_spacecraft_part_relationship/<int:part_id>/<int:spacecraft_id>", methods=["POST", "GET"])
+def delete_part_and_spacecraft_relationship(part_id, spacecraft_id):
+    
+    query1 = """
+    DELETE
+
+    FROM Spacecraft_has_Parts
+
+    WHERE Spacecraft_has_Parts.id_spacecraft=%s AND Spacecraft_has_Parts.id_part=%s;
+    """   
+    
+    cur = mysql.connection.cursor()
+    cur.execute(query1, (spacecraft_id, part_id))
+    cur = mysql.connection.cursor()
+    mysql.connection.commit()
+    return redirect("/parts-and-spacecraft")
 
 # reference to allow for debugging https://flask.palletsprojects.com/en/2.2.x/errorhandling/
 # @app.errorhandler(HTTPException)
