@@ -166,23 +166,27 @@
     
 
 
-    function updateSpacecraft_Handler(id) {    
+    function updateSpacecraftPartRelationship_Handler(id) {    
         
         
-        let toUpdate = document.getElementById('spacecraft_id_update').value;
-        let name = document.getElementById('spacecraft_name_update').value;
-        let in_orbit = document.getElementById('orbit_select_option').value;
+        let spacecraft_index_to_update = document.getElementById('spacecraft_update_select_option').value;
+        let part_index_to_update = document.getElementById('part_update_select_option').value;
 
-        const url = '/update_spacecraft/' + toUpdate;
-        const url2 = '/spacecraft'; 
+        let old_spacecraft_index = document.getElementById('spacecraft_id_update').innerHTML
+        let old_spacecraft_name = document.getElementById('spacecraft_name_update').innerHTML
+
+        let old_part_index = document.getElementById('part_id_update').innerHTML
+        let old_part_name = document.getElementById('part_name_update').innerHTML
+
+        const url = '/update_spacecraft_part_relationship/'
 
         const data = {
-            spacecraft_name_update: name,
-            orbit_select_option: in_orbit,
-            launched_select_option: launched,
-            soi_select_option: sphere_of_influence,
-            spacecraft_delta_v_update: delta_v_remaining,
-            spacecraft_met_update: MET_days
+            spacecraft_index_to_update: spacecraft_index_to_update,
+            part_index_to_update: part_index_to_update,
+            old_spacecraft_index: old_spacecraft_index,
+            old_spacecraft_name: old_spacecraft_name,
+            old_part_index: old_part_index,
+            old_part_name: old_part_name
         };
 
         fetch(url, {
@@ -195,11 +199,11 @@
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            browseSpacecraft();
+            browseRelationship();
         })
         .catch(error => {
             console.error('Error:', error);
-            browseSpacecraft();
+            browseRelationship();
         });
 }
 
@@ -337,7 +341,7 @@
                     </select>
 
         </fieldset>
-            <input class="submit_button" type="submit" id="UpdateSaveRelationship" value="Save Updated Relationship">
+            <input class="submit_button" type="submit" id="UpdateSaveRelationship" value="Save Updated Relationship" onClick="updateSpacecraftPartRelationship_Handler()">
             <input class="cancel_button" type="button" value="Cancel" onClick="browseRelationship()">
         </form> 
     </div>

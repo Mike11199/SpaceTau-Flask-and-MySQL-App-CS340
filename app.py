@@ -593,18 +593,29 @@ def get_all_parts():
     return jsonify(spacecrafts)
 
 
-@app.route("/update_parts_and_spacecraft/<int:id>", methods=["POST", "GET"])
-def update_part_and_spacecraft_relationship(part_id, spacecraft_id):
+@app.route("/update_spacecraft_part_relationship/", methods=["POST", "GET"])
+def update_part_and_spacecraft_relationship():
+    
     data = request.get_json()
-    part_name = data["part_name"]
-    spacecraft_name = data["spacecraft_name"]
-    spacecraft_id = data["spacecraft_id"]
-    add_relationship_query = "UPDATE Spacecraft_has_Parts SET id_spacecraft=%s, id_part=%s WHERE id_spacecraft=%s"
+    
+    spacecraft_index_to_update = data["spacecraft_index_to_update"]
+    part_index_to_update = data["part_index_to_update"]
+    
+    old_spacecraft_index = data["old_spacecraft_index"]
+    old_spacecraft_name = data["old_spacecraft_name"]
+    
+    old_part_index = data["old_part_index"]    
+    old_part_name = data["old_part_name"]
+   
+        
+    add_relationship_query = "UPDATE Spacecraft_has_Parts SET id_spacecraft=%s, id_part=%s WHERE id_spacecraft=%s and id_part=%s"
     cur = mysql.connection.cursor()
-    cur.execute(add_relationship_query, (spacecraft_name, part_name, spacecraft_id))
+    cur.execute(add_relationship_query, (spacecraft_index_to_update, part_index_to_update, old_spacecraft_index, old_part_index))
     mysql.connection.commit()
 
-    return jsonify(part_id, spacecraft_id)
+    # return jsonify(part_id, spacecraft_id)
+    return redirect("/parts-and-spacecraft")
+
 
 @app.route("/delete_spacecraft_part_relationship/<int:part_id>/<int:spacecraft_id>", methods=["POST", "GET"])
 def delete_part_and_spacecraft_relationship(part_id, spacecraft_id):
