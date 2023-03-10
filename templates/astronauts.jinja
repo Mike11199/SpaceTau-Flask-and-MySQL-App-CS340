@@ -82,18 +82,61 @@
                 <label> Mission Role </label> <input type="text" name="mission_role">
                 <label> Spacecraft Name (Optional) </label>
                     <select name="spacecraft_id">
-                        <option value="0">&nbsp;</option>
+                        <option></option>
+                        {%for id, name in spacecraft_dict.items()%}
+                            <option value="{{id}}">{{name}}</option>
+                        {% endfor %}
+                        {# <option value="0">&nbsp;</option>
                         <option value="1">Lunar Gateway</option>
-                        <option value="2">Crew Capsule I</option>
+                        <option value="2">Crew Capsule I</option> #}
                     </select>
         </fieldset>
             <input class="submit_button" type="submit" id="addAstronaut" value="Add Astronaut">
             <input class="cancel_button" type="button" value="Cancel" onClick="browseAstronaut()">
         </form> 
     </div>
+
+    {%if astronaut_data %}
+        <div id="browse" style="display: block">
+            <table>
+                <thead>
+                    <tr>
+                        <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in astronaut_data[0].keys() %}                            
+                            <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                            <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>					
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+					<!-- Now, iterate through every item in data -->
+                    {% for item in astronaut_data %}
+					    <tr>
+						    <!-- Then iterate through every key in the current item dictionary -->
+                            {% for key in item.keys() %}
+						         <!-- Create a <td> element with the value of that key in it -->
+                                {% if key == "id_astronaut" %}     
+                                    <td> {{item[key]}} </td> 
+                                {% else %}     
+                                    <td> {{item[key]}} </td> 
+                                {% endif %} 
+                            {% endfor %}
+
+                            <!-- Create our edit/delete buttons --> 
+                            <td><a href="#" onClick="updateAstronaut('{{item['Astronaut ID']}}')">Edit</a></td>
+                            <td><a href="#" onclick="deleteAstronaut('{{item['Astronautt ID']}}')">Delete</a></td>
+					    </tr> 
+                    {% endfor %}
+            </table>
+        </div>
+    {% endif %}
     
     {# TABLE FOR SELECT STATEMENT #}
-    <div id="browse" style="display: block">
+    {# <div id="browse" style="display: block">
       <table>
         <thead>
         <tr>
@@ -140,9 +183,7 @@
         <tbody>            
         </tbody>
     </table>
-    </div>
-
-
+    </div> #}
     
 </body>
 </html>
