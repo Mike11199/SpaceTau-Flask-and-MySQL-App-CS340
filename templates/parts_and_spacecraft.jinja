@@ -144,16 +144,12 @@
     {# FORM FOR UPDATING A PART - This becomes visible when the EDIT BUTTON on a record is clicked #}
     <div id="update" class="updateForm">
         <form method="POST" id="updateRelationship">
-            <legend><strong>Update Person</strong></legend>
+            <legend><strong>Update Relationship</strong></legend>
             <fieldset class="fields">
             <input type="hidden" name="personID" id="updatepersonID" value="1">
-            <label> ID: </label> 1
+            <label> ID: </label>
                 <label> Part name </label> <input type="text" name="part_name" value="Part">
                 <label> Spacecraft name </label> <input type="text" name="spacecraft_name" value="Spacecraft">
-                    {# <option value="0">&nbsp;</option>
-                    <option value="1" selected>Gemenon</option>
-                    <option value="2">Leonis</option>
-                    <option value="3">Caprica</option> #}
 
                         {%if spacecraft_parts_data %}
                             {% for spacecraft in spacecraft_parts_data%}
