@@ -2,37 +2,71 @@ from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request, jsonify
 
+from flask import Flask, request, make_response
+from flask_sqlalchemy import SQLAlchemy
+import psycopg2
+from connect_unix import get_connect_url, get_engine
+
+
 # from werkzeug.exceptions import HTTPException  # reference to allow for debugging https://flask.palletsprojects.com/en/2.2.x/errorhandling/
 
 import os
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+# from dotenv import load_dotenv, find_dotenv
+# load_dotenv(find_dotenv())
+
+# PASSWORD = os.getenv("PASSWORD")
+# PUBLIC_IP_ADDRESS = os.getenv("PUBLIC_IP_ADDRESS")
+# DBNAME = os.getenv("DBNAME")
+# PROJECT_ID = os.getenv("PROJECT_ID")
+# INSTANCE_NAME = os.getenv("INSTANCE_NAME")
 
 
-USER_NAME = os.getenv("USER_NAME")
-PASSWORD_LAST_4_DIGITS_STUDENT_ID = os.getenv("PASSWORD_LAST_4_DIGITS_STUDENT_ID")
+# connection = psycopg2.connect(
+#    user = 'postgres',
+#    password = PASSWORD,
+#    host = PUBLIC_IP_ADDRESS,
+#    port = '5432',
+#    database = DBNAME
+# )
+
 
 
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
-app.config['MYSQL_USER'] = USER_NAME
-app.config['MYSQL_PASSWORD'] = PASSWORD_LAST_4_DIGITS_STUDENT_ID #last 4 of onid
-app.config['MYSQL_DB'] = USER_NAME
-app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
-mysql = MySQL(app)
+# app.config["SQLALCHEMY_DATABASE_URI"] = get_connect_url()
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
+
+# db = SQLAlchemy(app)
+# # session = db.session()
+
+engine = get_engine()
+conn = engine.connect()
+# cursor = session.execute(sql).cursor
+
+
+# app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
+# app.config['MYSQL_USER'] = USER_NAME
+# app.config['MYSQL_PASSWORD'] = PASSWORD_LAST_4_DIGITS_STUDENT_ID #last 4 of onid
+# app.config['MYSQL_DB'] = USER_NAME
+# app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+
+# mysql = MySQL(app)
 
 
 # Routes
 @app.route('/')
 def root():
+    
+    result = conn.execute('SELECT * FROM mytable').fetchall()
+    conn.close()
     return render_template("main.jinja")
 
 
 @app.route('/spacecraft', methods=["POST", "GET"])
 def spacecraft_page():
+
 
 
     if request.method == "GET":

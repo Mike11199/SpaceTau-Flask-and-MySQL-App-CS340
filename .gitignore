@@ -12,3 +12,5 @@ bin/
 lib/
 lib64/
 bin
+
+env
