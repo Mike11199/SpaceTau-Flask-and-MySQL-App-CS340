@@ -39,49 +39,50 @@
         </tr>        
         </thead>
         <tr>
-            <td >Spacecaft</td>
-            <td >placeholder</td>
+            <td >Spacecafts</td>
+            <td >Records details about spacecraft we own/track in orbit or on the pad.</td>
         </tr>
         <tr>
             <td >Parts</td>
-            <td >placeholder</td>
+            <td >Records the various parts that make up the spacecraft owned/tracked by the company.</td>
         </tr>
         <tr>
             <td >SpaceCrafts/Parts Intersection Table</td>
-            <td >placeholder</td>
+            <td >Joins the Parts and Spacecraft Table to allow for a many-to-many or M:N relationship.</td>
         </tr>
         <tr>
             <td >Missions</td>
-            <td >placeholder</td>
+            <td >Records data on individual missions.</td>
         </tr>
         <tr>
             <td >Astronauts</td>
-            <td >placeholder</td>
+            <td >Records information on our astronauts.</td>
         </tr>
         <tr>
             <td >Clients</td>
-            <td >placeholder</td>
+            <td >Records the clients SpaceTau does business with.</td>
         </tr>
         <tr>
             <td >Planetary Objects</td>
-            <td >placeholder</td>
+            <td >Records known celestial objects.</td>
         </tr>       
     </table>         
 
-    <p>ERD Diagram</p>       
+    <p><strong>ERD Diagram</strong></p>       
     {# <img src="../images/ERD.png" width="500px" style="margin-top: 20px;"> #}
     {# Reference - https://geekpython.in/render-images-from-flask #}
-    <img src= "{{url_for('static', filename='/images/ERD.png')}}" >
+    <img src= "{{url_for('static', filename='/images/ERD.png')}}" width="800px">
     
 
-    <p>MySQL Workbench Schema Diagram</p>            
-    {# <img src="../images/MySQL Workbench Schema.png" width="500px" style="margin-top: 20px;">             #}
-    <img src= "{{url_for('static', filename='/images/MySQL Workbench Schema.png')}}" >
-
-    <p>phpMyAdmin Schema Diagram</p>            
+    <p><strong>phpMyAdmin Schema Diagram</strong></p>            
     {# <img src="../images/phpMyAdmin Schema.png" width="500px" style="margin-top: 20px;">             #}
-    <img src= "{{url_for('static', filename='/images/phpMyAdmin Schema.png')}}" >
+    <img src= "{{url_for('static', filename='/images/phpMyAdmin Schema.png')}}" width="1000px">
+
+    <p><strong>MySQL Workbench Schema Diagram</strong></p>            
+    {# <img src="../images/MySQL Workbench Schema.png" width="500px" style="margin-top: 20px;">             #}
+    <img src= "{{url_for('static', filename='/images/MySQL Workbench Schema.png')}}" width="1200px">
+
     
-    <p>Copyright 2023 - Michael Iwanek & Travis Hudson</p>
+    <p><strong>Copyright 2023 - Michael Iwanek & Travis Hudson</strong></p>
 </body>
 </html>
