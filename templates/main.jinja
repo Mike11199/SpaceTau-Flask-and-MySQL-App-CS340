@@ -69,13 +69,18 @@
     </table>         
 
     <p>ERD Diagram</p>       
-    <img src="../images/ERD.png" width="500px" style="margin-top: 20px;">
+    {# <img src="../images/ERD.png" width="500px" style="margin-top: 20px;"> #}
+    {# Reference - https://geekpython.in/render-images-from-flask #}
+    <img src= "{{url_for('static', filename='/images/ERD.png')}}" >
+    
 
     <p>MySQL Workbench Schema Diagram</p>            
-    <img src="../images/MySQL Workbench Schema.png" width="500px" style="margin-top: 20px;">            
+    {# <img src="../images/MySQL Workbench Schema.png" width="500px" style="margin-top: 20px;">             #}
+    <img src= "{{url_for('static', filename='/images/MySQL Workbench Schema.png')}}" >
 
     <p>phpMyAdmin Schema Diagram</p>            
-    <img src="../images/phpMyAdmin Schema.png" width="500px" style="margin-top: 20px;">            
+    {# <img src="../images/phpMyAdmin Schema.png" width="500px" style="margin-top: 20px;">             #}
+    <img src= "{{url_for('static', filename='/images/phpMyAdmin Schema.png')}}" >
     
     <p>Copyright 2023 - Michael Iwanek & Travis Hudson</p>
 </body>
