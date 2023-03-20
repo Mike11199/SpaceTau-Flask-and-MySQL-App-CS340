@@ -1,29 +1,39 @@
+# use source ./bin/activate to activate virtual environment in vs code
+
 import time
 from flask import Flask, render_template, json, redirect
-from flask_mysqldb import MySQL
+import pymysql
 from flask import request, jsonify
 
 from werkzeug.exceptions import HTTPException  # reference to allow for debugging https://flask.palletsprojects.com/en/2.2.x/errorhandling/
 
 import os
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
 
-
-USER_NAME = os.getenv("USER_NAME")
-PASSWORD_LAST_4_DIGITS_STUDENT_ID = os.getenv("PASSWORD_LAST_4_DIGITS_STUDENT_ID")
 
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
-app.config['MYSQL_USER'] = USER_NAME
-app.config['MYSQL_PASSWORD'] = PASSWORD_LAST_4_DIGITS_STUDENT_ID #last 4 of onid
-app.config['MYSQL_DB'] = USER_NAME
-app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+db_user = os.environ.get('CLOUD_SQL_USERNAME')
+db_password = os.environ.get('CLOUD_SQL_PASSWORD')
+db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
+db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
 
-mysql = MySQL(app)
+def open_connection():
+    unix_socket = '/cloudsql/{}'.format(db_connection_name)
+    try:
+        if os.environ.get('GAE_ENV') == 'standard':
+            conn = pymysql.connect(user=db_user, password=db_password,
+                                unix_socket=unix_socket, db=db_name,
+                                cursorclass=pymysql.cursors.DictCursor
+                                )
+    except pymysql.MySQLError as e:
+        print(e)
 
+    return conn
+
+
+
+mysql = open_connection()
 
 # Routes
 @app.route('/')
@@ -36,7 +46,11 @@ def spacecraft_page():
 
 
     if request.method == "GET":
-        cur = mysql.connection.cursor()
+        
+        mysql = open_connection()
+        cur = mysql.cursor()   # cur = cursor
+        
+        # cur = mysql.connection.cursor()
 
         query1 = "SELECT * FROM Spacecrafts;"
         cur.execute(query1)
@@ -69,6 +83,9 @@ def spacecraft_page():
         cur.execute(query3)
         spacecraft_data2 = cur.fetchall()
         spacecraft_data_dictionary =  {spacecraft['Spacecraft ID']: {'Spacecraft Name': spacecraft['Spacecraft Name'], 'In Orbit?': spacecraft['In Orbit?'],'Launched?': spacecraft['Launched?'],'Delta V Remaining': spacecraft['Delta V Remaining'],'Mission Elapsed Time (Days)': spacecraft['Mission Elapsed Time (Days)'],'Sphere of Influence': spacecraft['Sphere of Influence'], } for spacecraft in spacecraft_data2}
+
+        mysql.connection.commit()
+        mysql.connection.commit()
 
         # DON'T USE - PRIOR VERSION WHERE SPACECRAFT AND PLANETARY OBJECTS TABLE WERE PASSED INTO JINJA AND FUNCTION WAS USED TO LOOKUP PLANET BY PLANET ID.
         # NOW USING A SQL LEFT JOIN - KEEPING THIS AS AN EXAMPLE OF HOW TO PASS A PYTHON FUNCTION INTO
