@@ -296,6 +296,7 @@
     {# FORM FOR UPDATING A PART - This becomes visible when the EDIT BUTTON on a record is clicked #}
     <div id="update" class="updateForm2">
         <form method="POST" id="updateRelationship">
+
             <legend><strong>Update Spacecraft/Part Relationship</strong></legend>
             <fieldset class="fields">
 
@@ -323,6 +324,7 @@
                         {%if spacecraft_for_dropdown %}
                             {% for i in spacecraft_for_dropdown%}
                                 <option value="{{ i['id_spacecraft'] }}">{{i['name']}}</option>
+
                             {%endfor%}
                         {% endif %}
                     </select>

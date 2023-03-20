@@ -46,8 +46,122 @@
         }
     }
     function newAstronaut() { showform('insert'); }
-    function updateAstronaut(pid) { showform('update'); }
-    function deleteAstronaut(pid) { showform ('delete'); }
+    function updateAstronaut(id) {
+        //showform('update');
+        console.log(id)
+        url = '/get_astronaut/' + id
+        console.log(url)
+
+        fetch(url).then(function(response) {
+        
+        return response.json();
+        }).then(function(data) {
+            
+            console.log(data)
+            document.getElementById('astronaut_id_update').value = data[0].id_astronaut;
+            document.getElementById('astronaut_id_update_label').innerHTML = data[0].id_astronaut;
+            document.getElementById('astronaut_name_update').value = data[0].name;
+            document.getElementById('astronaut_age_update').value = data[0].age;
+            document.getElementById('astronaut_gender_update').value = data[0].gender;
+            document.getElementById('astronaut_mission_role_update').value = data[0].mission_role;
+            document.getElementById('astronaut_spacecraft_update').selectedIndex = data[0].id_spacecraft; 
+
+            showform('update'); 
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseAstronaut()
+        });
+    }
+    function updateAstronautHandler(id) {
+        let toUpdate = document.getElementById('astronaut_id_update').value;
+        let name = document.getElementById('astronaut_name_update').value;
+        let age = document.getElementById('astronaut_age_update').value;
+        let gender = document.getElementById('astronaut_gender_update').value;
+        let mission_role = document.getElementById('astronaut_mission_role_update').value;
+        let astronaut_spacecraft = document.getElementById('astronaut_spacecraft_update').value;
+
+        const url = '/update_astronaut/' + toUpdate;
+        const url2 = '/astronaut';
+        console.log(url)
+
+        const data = {
+            astronaut_name_update: name,
+            astronaut_gender_update: gender,
+            astronaut_age_update: age,
+            astronaut_mission_role_update: mission_role,
+            astronaut_spacecraft_update: astronaut_spacecraft
+        };
+        console.log(data);
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            browseAstronaut();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            browseAstronaut();
+        });
+    }
+
+    function deleteAstronaut(id) {
+        //showform ('delete');
+        url = '/get_astronaut/' + id
+
+        console.log(url)
+
+        fetch(url).then(function(response) {
+        
+        return response.json();
+        }).then(function(data) {
+            
+            console.log(data)
+            document.getElementById('astronaut_id_delete').innerHTML = data[0].id_astronaut;
+            document.getElementById('astronaut_name_delete').innerHTML = data[0].name;
+            document.getElementById('astronaut_age_delete').innerHTML = data[0].age;
+            document.getElementById('astronaut_gender_delete').innerHTML = data[0].gender;
+            document.getElementById('astronaut_mission_role_delete').innerHTML = data[0].mission_role;
+            document.getElementById('astronaut_spacecraft_delete').innerHTML = data[0].id_spacecraft;     
+            showform ('delete'); 
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseAstronaut()
+        });
+    }
+    function deleteAstronautHandler() { 
+
+        let toDelete = document.getElementById('astronaut_id_delete').innerHTML
+        console.log(toDelete)       
+        url = '/delete_astronaut/' + toDelete
+        url2 = '/astronaut' 
+
+        console.log(url)
+
+        fetch(url).then(function(response) {
+               
+        return response
+        }).then(function(data) {
+            
+            console.log(data)
+            browseAstronaut()
+
+
+        }).catch(function(err) {
+            console.log('Fetch Error :-S', err);
+            browseAstronaut()
+        });
+    }
     function browseAstronaut() { showform ('browse'); }
     function showAll() { showform ('all'); }
 
@@ -73,7 +187,7 @@
 
     {# FORM FOR ADDING A ASTRONAUT - Always Visible or Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
-        <form method="POST" id="addAstronaut">
+        <form method="POST" id="add_astronaut" action="/astronaut" method="post">
             <legend><strong>Add Astronaut</strong></legend>
             <fieldset class="fields">
                 <label> Name </label> <input type="text" name="name">
@@ -82,17 +196,64 @@
                 <label> Mission Role </label> <input type="text" name="mission_role">
                 <label> Spacecraft Name (Optional) </label>
                     <select name="spacecraft_id">
-                        <option></option>
+                        <option value="0"></option>
                         {%for id, name in spacecraft_dict.items()%}
                             <option value="{{id}}">{{name}}</option>
                         {% endfor %}
-                        {# <option value="0">&nbsp;</option>
-                        <option value="1">Lunar Gateway</option>
-                        <option value="2">Crew Capsule I</option> #}
                     </select>
-        </fieldset>
+            </fieldset>
             <input class="submit_button" type="submit" id="addAstronaut" value="Add Astronaut">
             <input class="cancel_button" type="button" value="Cancel" onClick="browseAstronaut()">
+        </form> 
+    </div>
+
+    <div id="update" class="updateForm">
+        <form method="POST" id="updateAstronaut">
+            <legend><strong>Update Spacecaft</strong></legend>
+            <fieldset class="fields">
+                <input type="hidden" name="astronautID" id="astronaut_id_update">
+                <label>ID: </label> <div id="astronaut_id_update_label"></div>
+                <label>Name: </label> <input type="text" name="astronaut_name_update" id="astronaut_name_update">
+                <label>Age: </label> <input type="text" name="astronaut_age_update" id="astronaut_age_update">
+                <label>Gender:</label> <input type="text" name="astronaut_gender_update" id="astronaut_gender_update">
+                <label>Mission Role:</label> <input type="text" name="astronaut_mission_role_update" id="astronaut_mission_role_update">
+                <label>Current Spacecraft:  </label> 
+                    <select name="astronaut_spacecraft_update" id="astronaut_spacecraft_update">
+                        <option value="0"></option>
+                        {%if spacecraft_dict%}
+                            {%for id, name in spacecraft_dict.items()%}
+                                <option value="{{id}}">{{name}}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                
+        </fieldset>
+            <input class="submit_button" type="submit" id="UpdateSaveAstronaut" value="Update Astronaut" onClick="updateAstronautHandler()">
+            <input class="cancel_button" type="button" value="Cancel" onClick="browseAstronaut()">
+        </form> 
+    </div>
+
+    <div id="delete" style="display: block" class="deleteForm">
+        <form method="POST" id="deleteAstronaut">
+            <legend><strong>Delete Astronaut</strong></legend>
+                <fieldset class="fields">
+                <p>Are you sure you wish to delete the following?</p>
+                <input type="hidden" name="astronautID" id="deleteastronautID" value="1">
+                <label><strong>Astronaut ID:</strong></label> 
+                <div id="astronaut_id_delete"></div>
+                <label> <strong>Name:</strong> </label> 
+                <div id="astronaut_name_delete"></div>
+                <label> <strong>Age:</strong> </label> 
+                <div id="astronaut_age_delete"></div>
+                <label> <strong>Gender:</strong> </label>
+                <div id="astronaut_gender_delete"></div>
+                <label> <strong>Mission Role:</strong> </label>
+                <div id="astronaut_mission_role_delete"></div>
+                <label> <strong>Spacecraft ID:</strong> </label>
+                <div id="astronaut_spacecraft_delete"></div>
+            </fieldset>
+            <input class="submit_button" type="submit" id="DeleteAstronaut" value="Delete Astronaut" onClick="deleteAstronautHandler()">
+            <input class="cancel_button" type="button" value="cancel" onClick="browseAstronaut()">
         </form> 
     </div>
 
@@ -127,63 +288,14 @@
                             {% endfor %}
 
                             <!-- Create our edit/delete buttons --> 
-                            <td><a href="#" onClick="updateAstronaut('{{item['Astronaut ID']}}')">Edit</a></td>
-                            <td><a href="#" onclick="deleteAstronaut('{{item['Astronautt ID']}}')">Delete</a></td>
+                            <td><a href="#" onClick="updateAstronaut('{{item['id_astronaut']}}')">Edit</a></td>
+                            <td><a href="#" onclick="deleteAstronaut('{{item['id_astronaut']}}')">Delete</a></td>
 					    </tr> 
                     {% endfor %}
             </table>
         </div>
     {% endif %}
     
-    {# TABLE FOR SELECT STATEMENT #}
-    {# <div id="browse" style="display: block">
-      <table>
-        <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Age</th>
-            <th scope="col">Gender</th>
-            <th scope="col">Mission Role</th>            
-            <th scope="col">Spacecraft Name</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-        </tr>        
-        </thead>
-        <tr>
-            <td align="center" >1</td>
-            <td >Buzz Aldrin</td>
-            <td align="right" >93</td>
-            <td>Male</td>
-            <td>Pilot</td>
-            <td>Lunar Gateway</td>
-            <td><a href="#" onClick="updatePerson('this.personID')">Edit</a></td>
-            <td><a href="#" onclick="deletePerson('this.personID')">Delete</a></td>
-        </tr>
-        <tr>
-            <td align="center" >2</td>
-            <td >Joe Acaba</td>
-            <td align="right" >55</td>
-            <td>Male</td>
-            <td>Engineer</td>
-            <td>Lunar Gateway</td>
-            <td><a href="#" onClick="updatePerson('this.personID')">Edit</a></td>
-            <td><a href="#" onclick="deletePerson('this.personID')">Delete</a></td>
-        </tr>
-        <tr>
-            <td align="center" >3</td>
-            <td >Kayla Barron</td>
-            <td align="right" >35</td>
-            <td>Female</td>
-            <td>Specialist</td>
-            <td>Null</td>
-            <td><a href="#" onClick="updatePerson('this.personID')">Edit</a></td>
-            <td><a href="#" onclick="deletePerson('this.personID')">Delete</a></td>
-        </tr>
-        <tbody>            
-        </tbody>
-    </table>
-    </div> #}
     
 </body>
 </html>
