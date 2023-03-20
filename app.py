@@ -9,7 +9,6 @@ from werkzeug.exceptions import HTTPException  # reference to allow for debuggin
 import os
 
 
-
 app = Flask(__name__)
 
 db_user = os.environ.get('CLOUD_SQL_USERNAME')
