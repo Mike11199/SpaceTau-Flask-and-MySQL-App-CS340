@@ -1,3 +1,9 @@
+# Overview
+
+- A Flask (python) based web application using jinja templates for the front-end, and a MySQL backed database to store associated data.  The Flask/Jinja application allows a user to interact with the database with full CRUD functionality for the Spacecrafts, intersection table (Spacecraft/Parts), and Astronauts table.
+
+- This project demonstrates advanced knowledge of SQL, such as data definition/manipulation queries, ON CASCADE, intersection tables to support many-to-many relationships with foreign keys, and advanced queries.
+
 # Home Page
 
 ![image](https://user-images.githubusercontent.com/91037796/226444086-02749272-c008-49a0-bcbb-187085ae50a8.png)
