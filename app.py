@@ -1,5 +1,4 @@
 # use source ./bin/activate to activate virtual environment in vs code
-
 import time
 from flask import Flask, render_template, json, redirect
 import pymysql
