@@ -362,25 +362,26 @@ def update_astronaut(id):
     age = data["astronaut_age_update"]
     gender = data["astronaut_gender_update"]
     mission_role = data["astronaut_mission_role_update"]
-    spacecraft = data["astronaut_spacecraft_update"]
-    print(spacecraft)
+    spacecraft_str = data["astronaut_spacecraft_update"]
+    spacecraft = int(spacecraft_str)
+    # print(f"New Spacecraft for {name} is: {spacecraft}")
 
     if spacecraft == 0 or '0':
         print("Null Spacecraft")
         query = """
                 UPDATE Astronauts
-                SET name=%s, age=%s, gender=%s, mission_role=%s
-                WHERE id_spacecraft = %s;
+                SET name=%s, age=%s, gender=%s, mission_role=%s, id_spacecraft=NULL
+                WHERE id_astronaut = %s;
                 """
         cur = mysql.connection.cursor()
         cur.execute(query, (name, age, gender, mission_role, id))
         mysql.connection.commit()
     else:
-        print(f"New Spacecraft {spacecraft}")
+        #print(f"New Spacecraft {spacecraft}")
         query = """
                 UPDATE Astronauts
                 SET name=%s, age=%s, gender=%s, mission_role=%s, id_spacecraft=%s
-                WHERE id_spacecraft = %s;
+                WHERE id_astronaut = %s;
                 """
         cur = mysql.connection.cursor()
         cur.execute(query, (name, age, gender, mission_role, spacecraft, id))
