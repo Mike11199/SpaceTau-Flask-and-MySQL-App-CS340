@@ -606,6 +606,7 @@ def get_part_and_spacecraft_relationship( part_id, spacecraft_id):
     query1 = """
     SELECT
 
+
     Spacecraft_has_Parts.id_spacecraft as 'Spacecraft ID',
     Spacecrafts.name as 'Spacecraft Name',
     Spacecraft_has_Parts.id_part as 'Part ID',
@@ -644,6 +645,7 @@ def get_all_parts():
     query1 = """
     SELECT *
 
+
     FROM Parts
 
     """   
@@ -678,6 +680,7 @@ def update_part_and_spacecraft_relationship():
     return redirect("/parts-and-spacecraft")
 
 
+
 @app.route("/delete_spacecraft_part_relationship/<int:part_id>/<int:spacecraft_id>", methods=["POST", "GET"])
 def delete_part_and_spacecraft_relationship(part_id, spacecraft_id):
     
@@ -685,6 +688,17 @@ def delete_part_and_spacecraft_relationship(part_id, spacecraft_id):
     DELETE
 
     FROM Spacecraft_has_Parts
+
+
+
+@app.route("/delete_spacecraft_part_relationship/<int:part_id>/<int:spacecraft_id>", methods=["POST", "GET"])
+def delete_part_and_spacecraft_relationship(part_id, spacecraft_id):
+    
+    query1 = """
+    DELETE
+
+    FROM Spacecraft_has_Parts
+
 
     WHERE Spacecraft_has_Parts.id_spacecraft=%s AND Spacecraft_has_Parts.id_part=%s;
     """   
@@ -716,4 +730,4 @@ def delete_part_and_spacecraft_relationship(part_id, spacecraft_id):
 if __name__ == "__main__":
 
     #Start the app on port 3000, it will be different once hosted; changed to 6574 per tutorial video
-    app.run(port=6779, debug=True)
+    app.run(port=6728, debug=True)
