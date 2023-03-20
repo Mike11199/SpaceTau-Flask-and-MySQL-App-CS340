@@ -40,7 +40,13 @@
 ![image](https://user-images.githubusercontent.com/91037796/226444457-16aa5b36-58ac-48a5-b130-f13cad998172.png)
 
 
-# Instructions to run
+# Google Cloud 
+
+![image](https://user-images.githubusercontent.com/91037796/226478770-6c10c5ba-2b6d-44d1-9854-c361b5526f38.png)
+
+
+
+# Instructions to run in Flip
 
 
 - Run the command 'Git clone https://github.com/Mike11199/CS-340-Group-Project.git'
