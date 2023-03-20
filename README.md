@@ -1,3 +1,42 @@
+# Overview
+
+- A Flask (python) based web application using jinja templates for the front-end, and a MySQL backed database to store associated data.  The Flask/Jinja application allows a user to interact with the database with full CRUD functionality for the Spacecrafts, intersection table (Spacecraft/Parts), and Astronauts table.
+
+- This project demonstrates advanced knowledge of SQL, such as data definition/manipulation queries, ON CASCADE, intersection tables to support many-to-many relationships with foreign keys, and advanced queries.
+
+# Home Page
+
+![image](https://user-images.githubusercontent.com/91037796/226444086-02749272-c008-49a0-bcbb-187085ae50a8.png)
+
+# Spacecraft Page
+
+![image](https://user-images.githubusercontent.com/91037796/226444153-23aa410f-2f3a-4310-9ade-7e49f8d0025a.png)
+
+# Parts Page
+
+![image](https://user-images.githubusercontent.com/91037796/226444191-bd31b5b4-8c83-48eb-9604-f299310842f8.png)
+
+# Spacecraft/Parts Intersection Table Page
+
+![image](https://user-images.githubusercontent.com/91037796/226444235-cc4d09f6-d38b-4e22-bcfc-b0bede835fb7.png)
+
+# Missions Page
+
+![image](https://user-images.githubusercontent.com/91037796/226444277-2abd42e0-cc97-448f-87fa-87165f8aae6a.png)
+
+# Astronauts Page
+
+![image](https://user-images.githubusercontent.com/91037796/226444354-b8b3ad03-dced-4f16-a90d-7f4642358745.png)
+
+# Clients Page
+
+![image](https://user-images.githubusercontent.com/91037796/226444408-68d49583-6e08-4ade-abed-9773d5a0ff13.png)
+
+# Planetary Objects Page
+
+![image](https://user-images.githubusercontent.com/91037796/226444457-16aa5b36-58ac-48a5-b130-f13cad998172.png)
+
+
 # Instructions to run
 
 
