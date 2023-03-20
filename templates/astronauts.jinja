@@ -46,8 +46,20 @@
         }
     }
     function newAstronaut() { showform('insert'); }
+   
     function updateAstronaut(id) {
         //showform('update');
+
+
+        const updateAstronautForm = document.getElementById('updateAstronautFORM');
+
+        updateAstronautForm.addEventListener("submit", function(event) {
+            console.log(event);
+            event.preventDefault();
+        });
+
+
+
         console.log(id)
         url = '/get_astronaut/' + id
         console.log(url)
@@ -82,6 +94,7 @@
         let mission_role = document.getElementById('astronaut_mission_role_update').value;
         let astronaut_spacecraft = document.getElementById('astronaut_spacecraft_update').value;
 
+
         const url = '/update_astronaut/' + toUpdate;
         const url2 = '/astronaut';
         console.log(url)
@@ -106,10 +119,13 @@
         .then(data => {
             console.log(data);
             browseAstronaut();
+           // window.location.href = "/astronauts"
+            
         })
         .catch(error => {
             console.error('Error:', error);
             browseAstronaut();
+
         });
     }
 
@@ -145,6 +161,15 @@
         console.log(toDelete)       
         url = '/delete_astronaut/' + toDelete
         url2 = '/astronaut' 
+
+        //https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
+        //  const deleteAstronautForm = document.getElementById('deleteAstronaut_FORM');
+
+        //deleteAstronautForm.addEventListener("submit", function(event) {
+        //     console.log(event);
+        //    event.preventDefault();
+        //});
+
 
         console.log(url)
 
@@ -187,7 +212,7 @@
 
     {# FORM FOR ADDING A ASTRONAUT - Always Visible or Toggled by a Button above or below the table - TODO #}
     <div id="insert" class="insertForm">
-        <form method="POST" id="add_astronaut" action="/astronaut" method="post">
+        <form method="POST" id="add_astronaut" action="/astronauts" method="post">
             <legend><strong>Add Astronaut</strong></legend>
             <fieldset class="fields">
                 <label> Name </label> <input type="text" name="name">
@@ -207,9 +232,10 @@
         </form> 
     </div>
 
+
     <div id="update" class="updateForm">
-        <form method="POST" id="updateAstronaut">
-            <legend><strong>Update Spacecaft</strong></legend>
+        <form method="POST" id="updateAstronautFORM">
+            <legend><strong>Update Astronaut</strong></legend>
             <fieldset class="fields">
                 <input type="hidden" name="astronautID" id="astronaut_id_update">
                 <label>ID: </label> <div id="astronaut_id_update_label"></div>
@@ -234,7 +260,7 @@
     </div>
 
     <div id="delete" style="display: block" class="deleteForm">
-        <form method="POST" id="deleteAstronaut">
+        <form method="POST" id="deleteAstronaut_FORM">
             <legend><strong>Delete Astronaut</strong></legend>
                 <fieldset class="fields">
                 <p>Are you sure you wish to delete the following?</p>
@@ -288,8 +314,8 @@
                             {% endfor %}
 
                             <!-- Create our edit/delete buttons --> 
-                            <td><a href="#" onClick="updateAstronaut('{{item['id_astronaut']}}')">Edit</a></td>
-                            <td><a href="#" onclick="deleteAstronaut('{{item['id_astronaut']}}')">Delete</a></td>
+                            <td style="text-align:center;"><a href="#" onClick="updateAstronaut('{{item['Astronaut ID']}}')">Edit</a></td>
+                            <td style="text-align:center;"><a href="#" onclick="deleteAstronaut('{{item['Astronaut ID']}}')">Delete</a></td>
 					    </tr> 
                     {% endfor %}
             </table>

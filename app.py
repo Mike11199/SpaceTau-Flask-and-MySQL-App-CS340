@@ -1,3 +1,4 @@
+import time
 from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request, jsonify
@@ -298,7 +299,20 @@ def astronauts_page():
     
     if request.method == "GET":
         cur = mysql.connection.cursor()
-        query_all = "SELECT * FROM Astronauts;"
+        query_all = """
+                SELECT                 
+                Astronauts.id_astronaut as 'Astronaut ID',
+                Astronauts.name as 'Name',
+                Astronauts.age as 'Age',
+                Astronauts.gender as 'Gender',
+                Astronauts.mission_role as 'Mission Role',
+                Spacecrafts.name as 'Spacecraft Name'
+                
+                FROM Astronauts
+                
+                LEFT JOIN Spacecrafts on Spacecrafts.id_spacecraft = Astronauts.id_spacecraft                       
+            """
+                             
         cur.execute(query_all)
         astronaut_data = cur.fetchall()
         cur = mysql.connection.cursor()
@@ -310,26 +324,27 @@ def astronauts_page():
         return render_template("astronauts.jinja", astronaut_data=astronaut_data, spacecraft_dict=spacecraft_dict)
 
     if request.method == "POST":
-        if request.form.get("add_astronaut"):
-            name = request.form['name']
-            age = request.form['age']
-            gender = request.form['gender']
-            mission_role = request.form['mission_role']
-            spacecraft_id = request.form['spacecraft_id']
+        # if request.form.get("add_astronaut"):
+        name = request.form['name']
+        age = request.form['age']
+        gender = request.form['gender']
+        mission_role = request.form['mission_role']
+        spacecraft_id = request.form['spacecraft_id']
 
-            #NULL spacecraft
-            if spacecraft_id == 0 or spacecraft_id == "0":
-                astronaut_insert_query = "INSERT INTO Astronauts (name, age, gender, mission_role) VALUES (%s,%s,%s,%s);"
-                cur = mysql.connection.cursor()
-                vals = (name, age, gender, mission_role)
-                cur.execute(astronaut_insert_query, vals)
-                mysql.connection.commit()
-            else:
-                astronaut_insert_query = "INSERT INTO Astronauts (name, age, gender, mission_role, id_spacecraft) VALUES (%s,%s,%s,%s,%s);"
-                cur = mysql.connection.cursor()
-                vals = (name, age, gender, mission_role, spacecraft_id)
-                cur.execute(astronaut_insert_query, vals)
-                mysql.connection.commit()
+        #NULL spacecraft
+        if spacecraft_id == 0 or spacecraft_id == "0":
+            astronaut_insert_query = "INSERT INTO Astronauts (name, age, gender, mission_role) VALUES (%s,%s,%s,%s);"
+            cur = mysql.connection.cursor()
+            vals = (name, age, gender, mission_role)
+            cur.execute(astronaut_insert_query, vals)
+            mysql.connection.commit()
+        else:
+            astronaut_insert_query = "INSERT INTO Astronauts (name, age, gender, mission_role, id_spacecraft) VALUES (%s,%s,%s,%s,%s);"
+            cur = mysql.connection.cursor()
+            vals = (name, age, gender, mission_role, spacecraft_id)
+            cur.execute(astronaut_insert_query, vals)
+            mysql.connection.commit()
+        # return jsonify({'Success': 'Astronaut Updated!'}), 200
         return redirect("/astronauts")
 
 @app.route("/delete_astronaut/<int:id>")
@@ -340,10 +355,14 @@ def delete_astronaut(id):
     cur.execute(query, (id,))
     mysql.connection.commit()
 
-    # redirect back to people page
-    # message = jsonify({'Success': 'Spacecraft Deleted!'})
-    return jsonify({'Success': 'Astronaut Deleted!'}), 200
-    return redirect("/astronaut")
+    # return redirect("/astronauts")
+    # # redirect back to people page
+    # # message = jsonify({'Success': 'Spacecraft Deleted!'})
+    # # return redirect('/astronauts')
+    return redirect("/astronauts")
+    return jsonify({'Success': 'Astronaut Deleted!'}), 200,  
+    
+    # return redirect("/astronauts")
 
 @app.route("/get_astronaut/<int:id>")
 def retrieve_astronaut(id):
@@ -363,10 +382,14 @@ def update_astronaut(id):
     gender = data["astronaut_gender_update"]
     mission_role = data["astronaut_mission_role_update"]
     spacecraft_str = data["astronaut_spacecraft_update"]
+    
+    print(spacecraft_str)
     spacecraft = int(spacecraft_str)
     # print(f"New Spacecraft for {name} is: {spacecraft}")
+    
+    print(name, age, gender, mission_role, spacecraft_str, spacecraft)
 
-    if spacecraft == 0 or '0':
+    if spacecraft == 0 or spacecraft == '0':
         print("Null Spacecraft")
         query = """
                 UPDATE Astronauts
@@ -374,6 +397,7 @@ def update_astronaut(id):
                 WHERE id_astronaut = %s;
                 """
         cur = mysql.connection.cursor()
+        print(query)
         cur.execute(query, (name, age, gender, mission_role, id))
         mysql.connection.commit()
     else:
@@ -384,10 +408,14 @@ def update_astronaut(id):
                 WHERE id_astronaut = %s;
                 """
         cur = mysql.connection.cursor()
+        print(query)
         cur.execute(query, (name, age, gender, mission_role, spacecraft, id))
         mysql.connection.commit()
 
-    return jsonify(id)
+    time.sleep(1)   
+    return redirect('/astronauts')
+      
+    
 
 @app.route('/clients', methods=["POST", "GET"])
 def clients_page():
@@ -664,11 +692,11 @@ def update_part_and_spacecraft_relationship():
     spacecraft_index_to_update = data["spacecraft_index_to_update"]
     part_index_to_update = data["part_index_to_update"]
     
+    old_part_index = data["old_part_index"]   
     old_spacecraft_index = data["old_spacecraft_index"]
-    old_spacecraft_name = data["old_spacecraft_name"]
     
-    old_part_index = data["old_part_index"]    
-    old_part_name = data["old_part_name"]
+    # old_spacecraft_name = data["old_spacecraft_name"]        
+    # old_part_name = data["old_part_name"]
    
         
     add_relationship_query = "UPDATE Spacecraft_has_Parts SET id_spacecraft=%s, id_part=%s WHERE id_spacecraft=%s and id_part=%s"
@@ -678,16 +706,6 @@ def update_part_and_spacecraft_relationship():
 
     # return jsonify(part_id, spacecraft_id)
     return redirect("/parts-and-spacecraft")
-
-
-
-@app.route("/delete_spacecraft_part_relationship/<int:part_id>/<int:spacecraft_id>", methods=["POST", "GET"])
-def delete_part_and_spacecraft_relationship(part_id, spacecraft_id):
-    
-    query1 = """
-    DELETE
-
-    FROM Spacecraft_has_Parts
 
 
 
