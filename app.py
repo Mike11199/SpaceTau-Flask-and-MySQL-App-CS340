@@ -3,6 +3,10 @@ import time
 from flask import Flask, render_template, json, redirect
 import pymysql
 from flask import request, jsonify
+import os
+from dotenv import load_dotenv, find_dotenv
+from flask_mysqldb import MySQL
+
 
 from werkzeug.exceptions import HTTPException  # reference to allow for debugging https://flask.palletsprojects.com/en/2.2.x/errorhandling/
 
@@ -16,10 +20,15 @@ app = Flask(__name__)
 # db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
 # db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
 
+# print(db_user)
+
 # def open_connection():
 #     unix_socket = '/cloudsql/{}'.format(db_connection_name)
+    
+#     conn = None
 #     try:
 #         if os.environ.get('GAE_ENV') == 'standard':
+#             print('got env variable')
 #             conn = pymysql.connect(user=db_user, password=db_password,
 #                                 unix_socket=unix_socket, db=db_name,
 #                                 cursorclass=pymysql.cursors.DictCursor
@@ -29,9 +38,26 @@ app = Flask(__name__)
 
 #     return conn
 
+load_dotenv(find_dotenv())
+
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_DB = os.getenv("MYSQL_DB")
+
+print(MYSQL_DB)
+print('what')
+
+app.config['MYSQL_HOST'] = MYSQL_HOST
+app.config['MYSQL_USER'] = MYSQL_USER
+app.config['MYSQL_PASSWORD'] = MYSQL_PASSWORD
+app.config['MYSQL_DB'] = MYSQL_DB
+app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 
-# mysql = open_connection()
+
+mysql = MySQL(app)
+
 
 # Routes
 @app.route('/')
@@ -45,10 +71,9 @@ def spacecraft_page():
 
     if request.method == "GET":
         
-        mysql = open_connection()
-        cur = mysql.cursor()   # cur = cursor
         
-        # cur = mysql.connection.cursor()
+        cur = mysql.connection.cursor()      
+        
 
         query1 = "SELECT * FROM Spacecrafts;"
         cur.execute(query1)
