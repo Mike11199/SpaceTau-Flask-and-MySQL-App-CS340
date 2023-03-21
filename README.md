@@ -3,7 +3,7 @@
 https://spacetau.herokuapp.com/parts-and-spacecraft
 
 - Deployed to Heroku with continuous deployment.  The heroku build is redeployed whenever changes are pushed to the github branch 'herokudeployment'.
-- Uses JawsDB Maria as an external database for MySQL, using MariaDB.  Attempted to use Google Cloud but ran into errors. 
+- Uses JawsDB Maria as an external database for MySQL, using MariaDB.  
 
 # Overview
 
