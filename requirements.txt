@@ -29,3 +29,4 @@ tk-tools==0.16.0
 typing_extensions==4.5.0
 virtualenv==20.17.1
 Werkzeug==2.2.2
+gunicorn==20.1.0
