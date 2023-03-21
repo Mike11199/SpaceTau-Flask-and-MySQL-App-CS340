@@ -1,3 +1,10 @@
+# Live Website
+
+https://spacetau.herokuapp.com/parts-and-spacecraft
+
+- Deployed to Heroku with continuous deployment.  The heroku build is redeployed whenever changes are pushed to the github branch 'herokudeployment'.
+- Uses JawsDB Maria as an external database for MySQL, using MariaDB.  Attempted to use Google Cloud but ran into errors. 
+
 # Overview
 
 - A Flask (python) based web application using jinja templates for the front-end, and a MySQL backed database to store associated data.  The Flask/Jinja application allows a user to interact with the database with full CRUD functionality for the Spacecrafts, intersection table (Spacecraft/Parts), and Astronauts table.
@@ -40,11 +47,11 @@
 ![image](https://user-images.githubusercontent.com/91037796/226444457-16aa5b36-58ac-48a5-b130-f13cad998172.png)
 
 
-# Google Cloud 
+# Google Cloud - Attempt
 
 ![image](https://user-images.githubusercontent.com/91037796/226478770-6c10c5ba-2b6d-44d1-9854-c361b5526f38.png)
 
-
+- Managed to create database, but connection could not be established between Heroku and google cloud.
 
 # Instructions to run in Flip
 
