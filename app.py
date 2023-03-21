@@ -55,7 +55,6 @@ app.config['MYSQL_DB'] = MYSQL_DB
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 
-
 mysql = MySQL(app)
 
 
@@ -788,4 +787,4 @@ def delete_part_and_spacecraft_relationship(part_id, spacecraft_id):
 if __name__ == "__main__":
 
     #Start the app on port 3000, it will be different once hosted; changed to 6574 per tutorial video
-    app.run(port=6728, debug=True)
+    app.run(debug=True)
