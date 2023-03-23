@@ -2,8 +2,10 @@
 
 https://spacetau.herokuapp.com/parts-and-spacecraft
 
+- CS 340 Portfolio Project allowed to be hosted on a public repository.
 - Deployed to Heroku with continuous deployment.  The heroku build is redeployed whenever changes are pushed to the github branch 'herokudeployment'.
 - Uses JawsDB Maria as an external database for MySQL, using MariaDB.  
+
 
 # Overview
 
